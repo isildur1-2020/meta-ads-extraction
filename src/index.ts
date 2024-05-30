@@ -1,1 +1,3 @@
-console.log("Template");
+import args from "./config/yargs";
+
+console.log(args);
