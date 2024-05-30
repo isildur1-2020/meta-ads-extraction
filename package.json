@@ -1,0 +1,29 @@
+{
+  "name": "meta-ads-extraction",
+  "version": "1.0.0",
+  "description": "Script to extract Meta Advertisement Archive paginated",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "prestart": "npm run build",
+    "start": "node dist/index.js",
+    "dev": "concurrently \"tsc -w\" \"node --watch dist/index.js\"",
+    "test": ""
+  },
+  "keywords": [
+    "META",
+    "ADS",
+    "ARCHIVE",
+    "META",
+    "API",
+    "EXTRACTION"
+  ],
+  "author": "isildur1-2020",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.12.13",
+    "concurrently": "^8.2.2",
+    "rimraf": "^5.0.7",
+    "typescript": "^5.4.5"
+  }
+}
