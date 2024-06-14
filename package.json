@@ -28,6 +28,9 @@
   },
   "dependencies": {
     "@types/yargs": "^17.0.32",
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "puppeteer": "^22.11.0",
     "yargs": "^17.7.2",
     "zod": "^3.23.8"
   }
