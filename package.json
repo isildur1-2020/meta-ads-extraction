@@ -6,9 +6,9 @@
   "scripts": {
     "build": "rimraf dist && tsc",
     "prestart": "npm run build",
-    "start": "node dist/index.js",
+    "start": "node dist/index.js --since=2024-05-01 --until=2024-05-10",
     "serve": "node dist/index.js",
-    "dev": "concurrently \"tsc -w\" \"node --watch dist/index.js --since=2020-01-01 --until=2020-01-21\"",
+    "dev": "concurrently \"tsc -w\" \"node --watch dist/index.js --since=2024-05-01 --until=2024-05-10\"",
     "test": ""
   },
   "keywords": [
@@ -31,7 +31,6 @@
     "@types/yargs": "^17.0.32",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
-    "ora": "^8.0.1",
     "puppeteer": "^22.11.0",
     "yargs": "^17.7.2",
     "zod": "^3.23.8"

@@ -1,16 +1,17 @@
 import "dotenv/config";
 import args from "./config/yargs";
-import { writeFile } from "fs/promises";
-import { getAdsArchive } from "./services/meta/adsArchiveService";
-import { extractMetaPageInfo } from "./scrapper/meta/adsArchiveScrapper";
+import { MetaScrapper } from "./scrapper/meta/MetaScrapper";
+import { Args } from "./lib/constants";
 
 async function main() {
-  await getAdsArchive({
+  const configArgs = args as Args;
+  const metaScrapper = new MetaScrapper({
     limit: 2,
     search_terms: "ALL",
-    ad_delivery_date_min: "2024-05-01",
-    ad_delivery_date_max: "2024-05-31",
+    ad_delivery_date_min: configArgs.since,
+    ad_delivery_date_max: configArgs.until,
   });
+  await metaScrapper.getAdsArchive();
 
   // if (ads) {
   //   for (let ad of ads) {

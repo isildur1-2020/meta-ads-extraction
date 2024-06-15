@@ -1,5 +1,5 @@
-import { metaInstance } from "../../config/axios";
-import { META_LONG_TOKEN } from "../../config/env";
+import { metaInstance } from "../config/axios";
+import { META_LONG_TOKEN } from "../config/env";
 import {
   AD_COUNTRIES,
   AD_FIELDS,
@@ -9,7 +9,7 @@ import {
   AdsArchiveItem,
   AdsArchiveServiceParams,
   MetaApiResponse,
-} from "../../lib/constants";
+} from "../lib/constants";
 
 export class MetaServices {
   public static async getAdsArchive(
@@ -26,7 +26,7 @@ export class MetaServices {
       MetaApiResponse<AdsArchiveItem>
     >("ads_archive", {
       params: {
-        after,
+        after: after || "",
         limit,
         access_token: META_LONG_TOKEN,
         fields: JSON.stringify([AD_FIELDS.PAGE_ID, AD_FIELDS.PAGE_NAME]),

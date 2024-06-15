@@ -12,6 +12,6 @@
 
 `docker-compose --file docker-compose.dev.yml up`
 
-## UNMOUNT FOR DEVELOPMENT
+## UMOUNT FOR DEVELOPMENT
 
 `docker-compose --file docker-compose.dev.yml down`

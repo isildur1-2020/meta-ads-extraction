@@ -1,5 +1,5 @@
 import * as zod from "zod";
-import { printErrMsg } from "./logs";
+import { Logger } from "./logs";
 import { dateSchema } from "./schemas";
 
 export const isValidDate = (date: string) => {
@@ -19,6 +19,6 @@ export const tryValidateDate = (date: string) => {
 
 const handleValidationErrors = (errors: zod.ZodIssue[]) => {
   errors.map(({ message }) => {
-    printErrMsg(`Input error: ${message}`);
+    Logger.printErrMsg(`Input error: ${message}`);
   });
 };

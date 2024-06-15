@@ -1,3 +1,8 @@
+export type Args = {
+  since: string;
+  until: string;
+};
+
 export type MetaApiResponse<T> = {
   data: T[];
   paging: MetaApiPaging;
@@ -330,3 +335,22 @@ export enum AD_FIELDS {
   PAGE_ID = "page_id",
   PAGE_NAME = "page_name",
 }
+
+export type BUC_ITEM = {
+  type: string;
+  call_count: number;
+  total_cputime: number;
+  total_time: number;
+  estimated_time_to_regain_access: number;
+};
+
+export type BUC = {
+  [key: string]: BUC_ITEM[];
+};
+
+export type MetaScrapperConfig = {
+  limit: number;
+  search_terms: string;
+  ad_delivery_date_min: string;
+  ad_delivery_date_max: string;
+};
