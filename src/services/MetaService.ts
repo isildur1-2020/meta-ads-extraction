@@ -22,9 +22,13 @@ export class MetaServices {
       ad_delivery_date_min,
       ad_delivery_date_max,
     } = config;
-    const { data, headers } = await metaInstance.get<
-      MetaApiResponse<AdsArchiveItem>
-    >("ads_archive", {
+    const {
+      data,
+      headers,
+      request,
+      config: cinfguration,
+      status,
+    } = await metaInstance.get<MetaApiResponse<AdsArchiveItem>>("ads_archive", {
       params: {
         after: after || "",
         limit,
@@ -145,9 +149,10 @@ export class MetaServices {
         // unmask_removed_content: false,
       },
     });
+    console.log({ data, headers, request, cinfguration, status });
 
     return {
-      limits: JSON.parse(headers["x-business-use-case-usage"]),
+      headers,
       ads: data.data,
       paging: data.paging,
     };

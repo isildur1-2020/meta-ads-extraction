@@ -1,7 +1,12 @@
-import { AdsArchiveItem, BUC, MetaScrapperConfig } from "../../lib/constants";
+import {
+  AdsArchiveItem,
+  BUC_ITEM,
+  MetaResponseHeaders,
+  MetaScrapperConfig,
+} from "../../lib/constants";
 import { Logger } from "../../lib/logs";
-import { MetaServices } from "../../services/meta/adsArchiveService";
 import { SCRAPPER_ID } from "../../config/env";
+import { MetaServices } from "../../services/MetaService";
 
 export class MetaScrapper {
   private counter = 1;
@@ -11,12 +16,12 @@ export class MetaScrapper {
 
   public async getAdsArchive() {
     try {
-      // await this.tryGetAdsArchive();
+      await this.tryGetAdsArchive();
       //   await appendFile(
       //     "output.txt",
       //     JSON.stringify(this.data_companies.keys())
       //   );
-      Logger.printProgressMsg("HELLO WORLD");
+      // Logger.printProgressMsg("HELLO WORLD");
     } catch (err: any) {
       console.log(err);
       console.log(err?.response?.data?.error);
@@ -24,12 +29,11 @@ export class MetaScrapper {
   }
 
   private async tryGetAdsArchive(config?: { after?: string }) {
-    const { ads, limits, paging } = await MetaServices.getAdsArchive({
+    const { ads, headers, paging } = await MetaServices.getAdsArchive({
       ...this.config,
       after: config?.after,
     });
-    this.printExtractionProgress();
-    this.printLimits(limits);
+    this.printProgress(headers as MetaResponseHeaders);
 
     this.saveOnRAM(ads);
     if (paging?.next) {
@@ -38,22 +42,24 @@ export class MetaScrapper {
     }
   }
 
-  private printExtractionProgress() {
+  private printProgress(headers: MetaResponseHeaders) {
     const { limit } = this.config;
     Logger.printProgressMsg(`## ADS EXTRACTED ${this.counter * limit}`);
+    this.printBUCStats(headers);
   }
 
-  private printLimits(limits: BUC) {
-    const { total_cputime, total_time } = this.getLimits(limits);
+  private printBUCStats(headers: MetaResponseHeaders) {
+    const { total_cputime, total_time } = this.getBUCInfo(headers);
     const message = `-- CPU_TIME ${total_cputime} -- TOTAL PERCENTAGE ${total_time} --`;
     Logger.printWarningMsg(message);
   }
 
-  private getLimits(limits: BUC) {
+  private getBUCInfo(headers: MetaResponseHeaders) {
     if (!SCRAPPER_ID) {
       throw new Error("SCRAPPER_ID must defined");
     }
-    return limits[SCRAPPER_ID][0];
+    const limits = JSON.parse(headers["x-business-use-case-usage"]);
+    return limits[SCRAPPER_ID][0] as BUC_ITEM;
   }
 
   private async saveOnRAM(ads: AdsArchiveItem[]) {

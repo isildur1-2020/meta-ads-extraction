@@ -354,3 +354,25 @@ export type MetaScrapperConfig = {
   ad_delivery_date_min: string;
   ad_delivery_date_max: string;
 };
+
+export type MetaResponseHeaders = {
+  etag: string;
+  "content-type": string;
+  vary: string;
+  "x-business-use-case-usage": string;
+  "access-control-allow-origin": string;
+  "facebook-api-version": string;
+  "strict-transport-security": string;
+  pragma: string;
+  "cache-control": string;
+  expires: string;
+  "x-fb-request-id": string;
+  "x-fb-trace-id": string;
+  "x-fb-rev": string;
+  "x-fb-debug": string;
+  date: string;
+  "x-fb-connection-quality": string;
+  "alt-svc": string;
+  connection: string;
+  "content-length": string;
+};

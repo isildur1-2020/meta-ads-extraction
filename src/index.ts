@@ -6,7 +6,7 @@ import { Args } from "./lib/constants";
 async function main() {
   const configArgs = args as Args;
   const metaScrapper = new MetaScrapper({
-    limit: 2,
+    limit: 1,
     search_terms: "ALL",
     ad_delivery_date_min: configArgs.since,
     ad_delivery_date_max: configArgs.until,
