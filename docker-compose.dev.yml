@@ -1,0 +1,16 @@
+version: "3.4"
+
+services:
+  meta-ads:
+    restart: unless-stopped
+    build:
+      context: .
+      target: dev
+      dockerfile: Dockerfile
+    image: meta-ads-extraction-dev
+    container_name: meta-ads-extraction-dev
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    environment:
+      META_LONG_TOKEN: ${META_LONG_TOKEN}

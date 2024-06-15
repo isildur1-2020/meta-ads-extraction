@@ -15,14 +15,17 @@ import { printProgressMsg } from "../../lib/logs";
 
 let data_companies = new Map();
 let counter = 1;
+// const spinner = ora("Loading unicornos").start();
 
 export const getAdsArchive = async (
   config: AdsArchiveServiceParams & { limit: number }
 ) => {
   try {
-    await tryGetAdsArchive(config);
+    // await tryGetAdsArchive(config);
+    printProgressMsg("EY CORRIENDO SIN PALABRAS, tu sabes coómo es esto mae");
     await appendFile("output.txt", JSON.stringify(data_companies.keys()));
   } catch (err: any) {
+    console.log(err);
     console.log(err?.response?.data?.error);
   }
 };

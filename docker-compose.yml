@@ -1,0 +1,13 @@
+version: "3.4"
+
+services:
+  meta-ads:
+    restart: unless-stopped
+    build:
+      context: .
+      target: prod
+      dockerfile: Dockerfile
+    image: meta-ads-extraction-prod
+    container_name: meta-ads-extraction-prod
+    environment:
+      META_LONG_TOKEN: ${META_LONG_TOKEN}
