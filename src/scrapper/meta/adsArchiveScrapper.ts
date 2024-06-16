@@ -8,6 +8,10 @@ const config = {
 export const extractMetaPageInfo = async (page_id: string) => {
   const browser = await puppeteer.launch(config);
   const page = await browser.newPage();
+  await page.goto("https://www.plataformabienestar.com/auth/pre-login");
+  await page.screenshot({ path: "bienestar.jpg" });
+  await page.click("#btn-login");
+  return;
   await page.goto(`https://www.facebook.com/${page_id}/`);
   return await page.evaluate(() => {
     const getClosestText = (props: {
