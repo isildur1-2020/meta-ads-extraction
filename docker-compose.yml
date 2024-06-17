@@ -9,8 +9,6 @@ services:
       dockerfile: Dockerfile
     image: meta-ads-extraction-prod
     container_name: meta-ads-extraction-prod
-    volumes:
-      - ./src/output:/app/src/output
     environment:
       META_LONG_TOKEN: ${META_LONG_TOKEN}
       SCRAPPER_ID: ${SCRAPPER_ID}

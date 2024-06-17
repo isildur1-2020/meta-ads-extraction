@@ -8,16 +8,19 @@ export type MetaApiResponse<T> = {
   paging: MetaApiPaging;
 };
 
-export type AdsArchiveItem = {
-  id: string;
-  page_name: string;
-  page_id: string;
-  ad_delivery_start_time: string;
+export type AdScrappedItem = {
   address?: string;
   phone?: string;
   website?: string;
   email?: string;
 };
+
+export interface AdsArchiveItem extends AdScrappedItem {
+  id: string;
+  page_name: string;
+  page_id: string;
+  ad_delivery_start_time: string;
+}
 
 export type MetaApiPaging = {
   cursors: {
@@ -380,4 +383,10 @@ export type MetaResponseHeaders = {
   "alt-svc": string;
   connection: string;
   "content-length": string;
+};
+
+export type ScrapperHTMLItem = {
+  iconClass: string;
+  parentClass: string;
+  contentClass: string;
 };

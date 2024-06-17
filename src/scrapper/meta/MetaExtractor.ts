@@ -1,4 +1,5 @@
 import {
+  AdScrappedItem,
   AdsArchiveItem,
   BUC_ITEM,
   MetaResponseHeaders,
@@ -6,8 +7,6 @@ import {
 } from "../../lib/constants";
 import { Logger } from "../../lib/logs";
 import { MetaServices } from "../../services/MetaService";
-import { appendFile } from "fs/promises";
-import path from "path";
 import { AxiosError } from "axios";
 import { ENV } from "../../config/Env";
 import { Ad } from "../../models/Ad";
@@ -17,8 +16,6 @@ import { getRandomNumber } from "../../lib/utils";
 export class MetaExtractor {
   private counter = 0;
   private randomNumber: number = 0;
-  private data_companies = new Map();
-  private readonly ads_data_path = path.join(process.cwd(), "/src/output/");
 
   constructor(private config: MetaScrapperConfig) {}
 
@@ -79,7 +76,7 @@ export class MetaExtractor {
   private printProgress(headers: MetaResponseHeaders) {
     Logger.printWarningMsg("-------------------------------------");
     Logger.printWarningMsg(
-      `-- LIMIT: ${this.randomNumber}, ADS EXTRACTED: ${this.counter} --`
+      `-- ADS DOWNLOADED: ${this.randomNumber}, ADS EXTRACTED: ${this.counter} --`
     );
     Logger.printWarningMsg("-------------------------------------");
     this.printBUCStats(headers);
@@ -112,10 +109,9 @@ export class MetaExtractor {
 
   private async persistAdsArchiveData(ads: AdsArchiveItem[]) {
     for (let ad of ads) {
-      const { page_id, page_name } = ad;
-      if (!this.data_companies.has(page_id)) {
-        this.data_companies.set(page_id, page_name);
-        this.persistAdsOnFile(ad);
+      const { page_id } = ad;
+      const adFound = await Ad.findOne({ page_id });
+      if (adFound === null) {
         await this.persistAdsOnDB(ad);
       }
     }
@@ -124,28 +120,30 @@ export class MetaExtractor {
   private async persistAdsOnDB(ad: AdsArchiveItem) {
     try {
       const { page_id } = ad;
-      const existsAd = await Ad.findOne({ page_id });
-      if (existsAd !== null) return;
       const ad_data = await this.scrappingMetaPage(page_id);
       if (ad_data !== null) {
-        console.log(ad_data);
-        await new Ad({ ...ad, ...ad_data }).save();
+        const payload = { ...ad, ...ad_data };
+        this.printAdInfo(payload);
+        await new Ad(payload).save();
       }
     } catch (err: any) {
       console.log(err);
     }
   }
 
-  private async scrappingMetaPage(page_id: string) {
-    Logger.printProgressMsg(`Scrapping page id: ${page_id}`);
-    return await MetaScrapper.extractMetaPageInfo(page_id);
+  private printAdInfo(ad: AdsArchiveItem & AdScrappedItem) {
+    const { page_id, address, email, phone, website } = ad;
+    Logger.printWarningMsg("-------------------------------------");
+    Logger.printWarningMsg(`-- PAGE: ${page_id}`);
+    Logger.printWarningMsg(`-- PHONE: ${phone}`);
+    Logger.printWarningMsg(`-- EMAIL: ${email}`);
+    Logger.printWarningMsg(`-- ADRRESS: ${address}`);
+    Logger.printWarningMsg(`-- WEBSITE: ${website}`);
+    Logger.printWarningMsg("-------------------------------------");
   }
 
-  private async persistAdsOnFile(ad: AdsArchiveItem) {
-    const { page_id, page_name, ad_delivery_start_time } = ad;
-    const { ad_delivery_date_min, ad_delivery_date_max } = this.config;
-    const file_name = `${ad_delivery_date_min}TO${ad_delivery_date_max}.csv`;
-    const ad_data = `"${page_id}","${page_name}","${ad_delivery_start_time}";\n`;
-    await appendFile(path.join(this.ads_data_path, file_name), ad_data);
+  private async scrappingMetaPage(page_id: string) {
+    Logger.printProgressMsg(`[SCRAPPING] Page i\d: ${page_id}`);
+    return await MetaScrapper.extractMetaPageInfo(page_id);
   }
 }
