@@ -1,116 +1,78 @@
-import {
-  AdsArchiveItem,
-  BUC_ITEM,
-  MetaResponseHeaders,
-  MetaScrapperConfig,
-} from "../../lib/constants";
-import { Logger } from "../../lib/logs";
-import { SCRAPPER_ID } from "../../config/env";
-import { MetaServices } from "../../services/MetaService";
-import { appendFile } from "fs/promises";
-import path from "path";
+import puppeteer, { Browser } from "puppeteer";
+
+const config = {
+  headless: true,
+  slowMo: 20,
+};
 
 export class MetaScrapper {
-  private counter = 1;
-  private data_companies = new Map();
-  private readonly ads_data_path = path.join(process.cwd(), "/src/output/");
+  private static browser: Browser;
 
-  constructor(private config: MetaScrapperConfig) {}
-
-  public async getAdsArchive() {
-    try {
-      await this.tryGetAdsArchive();
-    } catch (err: any) {
-      console.log(err?.response?.data?.error);
-    }
+  public static async init() {
+    this.browser = await puppeteer.launch(config);
   }
+  public static async extractMetaPageInfo(page_id: string) {
+    const page = await this.browser.newPage();
+    await page.goto(`https://www.facebook.com/${page_id}/`);
+    return await page.evaluate(() => {
+      const getClosestText = (props: {
+        iconClass: string;
+        parentClass: string;
+        contentClass: string;
+      }): string => {
+        const { iconClass, parentClass, contentClass } = props;
+        const iconNode = document.querySelector(iconClass);
+        if (!iconNode) return "";
+        const parentNode = iconNode.closest(parentClass);
+        if (!parentNode) return "";
+        const content = parentNode.querySelector(contentClass);
+        if (!content) return "";
+        return content.innerHTML;
+      };
+      const addressClasses = {
+        iconClass:
+          "img[src='https://static.xx.fbcdn.net/rsrc.php/v3/yr/r/bwmGKGh4YjO.png']",
+        parentClass:
+          "div.x9f619.x1n2onr6.x1ja2u2z.x78zum5.x2lah0s.x1nhvcw1.x1qjc9v5.xozqiw3.x1q0g3np.xyamay9.xykv574.xbmpl8g.x4cne27.xifccgj",
+        contentClass:
+          "span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.xlh3980.xvmahel.x1n0sxbx.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.x4zkp8e.x3x7a5m.x6prxxf.xvq8zen.xo1l8bm.xzsf02u",
+      };
+      const phoneClasses = {
+        iconClass:
+          "img[src='https://static.xx.fbcdn.net/rsrc.php/v3/y-/r/VIGUiR6qVQJ.png']",
+        parentClass:
+          "div.x9f619.x1n2onr6.x1ja2u2z.x78zum5.x2lah0s.x1nhvcw1.x1qjc9v5.xozqiw3.x1q0g3np.xyamay9.xykv574.xbmpl8g.x4cne27.xifccgj",
+        contentClass:
+          "span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.xlh3980.xvmahel.x1n0sxbx.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.x4zkp8e.x3x7a5m.x6prxxf.xvq8zen.xo1l8bm.xzsf02u.x1yc453h",
+      };
+      const emailClasses = {
+        iconClass:
+          "img[src='https://static.xx.fbcdn.net/rsrc.php/v3/yb/r/KVUi1wUrbfb.png']",
+        parentClass:
+          "div.x9f619.x1n2onr6.x1ja2u2z.x78zum5.x2lah0s.x1nhvcw1.x1qjc9v5.xozqiw3.x1q0g3np.xyamay9.xykv574.xbmpl8g.x4cne27.xifccgj",
+        contentClass:
+          "span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.xlh3980.xvmahel.x1n0sxbx.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.x4zkp8e.x3x7a5m.x6prxxf.xvq8zen.xo1l8bm.xzsf02u.x1yc453h",
+      };
+      const websiteClasses = {
+        iconClass:
+          "img[src='https://static.xx.fbcdn.net/rsrc.php/v3/y4/r/UF-jk_lKW5x.png']",
+        parentClass:
+          "div.x9f619.x1n2onr6.x1ja2u2z.x78zum5.x2lah0s.x1nhvcw1.x1qjc9v5.xozqiw3.x1q0g3np.xyamay9.xykv574.xbmpl8g.x4cne27.xifccgj",
+        contentClass:
+          "span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.xlh3980.xvmahel.x1n0sxbx.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.x4zkp8e.x3x7a5m.x6prxxf.xvq8zen.xo1l8bm.x1qq9wsj.x1yc453h",
+      };
 
-  private async tryGetAdsArchive(config?: { after?: string }) {
-    const { ads, headers, paging } = await MetaServices.getAdsArchive({
-      ...this.config,
-      after: config?.after,
+      const phone = getClosestText(phoneClasses);
+      const email = getClosestText(emailClasses);
+
+      if (!phone && !email) return null;
+
+      return {
+        phone,
+        email,
+        address: getClosestText(addressClasses),
+        website: getClosestText(websiteClasses),
+      };
     });
-    this.printProgress(headers as MetaResponseHeaders);
-    this.persistAdsArchiveData(ads);
-    await this.checkRateLimits(headers as MetaResponseHeaders);
-    if (paging?.next) {
-      this.tryGetAdsArchive({ after: paging.cursors.after });
-      this.counter++;
-    }
-  }
-
-  private async checkRateLimits(headers: MetaResponseHeaders) {
-    const { total_time, call_count } = this.getBUCInfo(headers);
-    if (total_time > 90 || call_count > 90) {
-      const minutesToSleep = 60 * 24;
-      Logger.printErrMsg(`The app need sleep for ${minutesToSleep} minutes`);
-      const intervalId = await this.scrapperToSleep(minutesToSleep);
-      clearInterval(intervalId);
-    }
-  }
-
-  private scrapperToSleep(minutes: number): Promise<NodeJS.Timeout> {
-    let counter = 1;
-    const intervalId = setInterval(() => {
-      const waitTime = minutes * 60 - counter;
-      Logger.printWarningMsg(`The app will start in ${waitTime} seconds...`);
-      counter++;
-    }, 1000);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(intervalId);
-      }, minutes * 60 * 1000);
-    });
-  }
-
-  private printProgress(headers: MetaResponseHeaders) {
-    const { limit } = this.config;
-    Logger.printProgressMsg(
-      `-- LIMIT: ${limit}, ADS EXTRACTED: ${this.counter * limit} --`
-    );
-    this.printBUCStats(headers);
-  }
-
-  private printBUCStats(headers: MetaResponseHeaders) {
-    const {
-      total_time,
-      call_count,
-      total_cputime,
-      estimated_time_to_regain_access,
-    } = this.getBUCInfo(headers);
-    Logger.printWarningMsg("-------------------------------------");
-    Logger.printWarningMsg(`-- TOTAL PERCENTAGE: ${total_time}`);
-    Logger.printWarningMsg(`-- CPU TIME: ${total_cputime}`);
-    Logger.printWarningMsg(`-- CALL COUNT: ${call_count}`);
-    Logger.printWarningMsg(
-      `-- TIME TO WAIT: ${estimated_time_to_regain_access}`
-    );
-    Logger.printWarningMsg("-------------------------------------");
-  }
-
-  private getBUCInfo(headers: MetaResponseHeaders) {
-    if (!SCRAPPER_ID) {
-      throw new Error("SCRAPPER_ID must defined");
-    }
-    const limits = JSON.parse(headers["x-business-use-case-usage"]);
-    return limits[SCRAPPER_ID][0] as BUC_ITEM;
-  }
-
-  private async persistAdsArchiveData(ads: AdsArchiveItem[]) {
-    for (let ad of ads) {
-      const { page_id, page_name } = ad;
-      if (!this.data_companies.has(page_id)) {
-        this.data_companies.set(page_id, page_name);
-        this.persistAdsOnFile(ad);
-      }
-    }
-  }
-
-  private async persistAdsOnFile(ad: AdsArchiveItem) {
-    const { page_id, page_name } = ad;
-    const { ad_delivery_date_min, ad_delivery_date_max } = this.config;
-    const file_name = `${ad_delivery_date_min}TO${ad_delivery_date_max}.csv`;
-    const ad_data = `"${page_id}","${page_name}";\n`;
-    await appendFile(path.join(this.ads_data_path, file_name), ad_data);
   }
 }

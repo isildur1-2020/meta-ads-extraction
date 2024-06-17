@@ -1,5 +1,5 @@
 import { metaInstance } from "../config/axios";
-import { META_LONG_TOKEN } from "../config/env";
+import { ENV } from "../config/Env";
 import {
   AD_COUNTRIES,
   AD_FIELDS,
@@ -28,8 +28,12 @@ export class MetaServices {
       params: {
         after: after || "",
         limit,
-        access_token: META_LONG_TOKEN,
-        fields: JSON.stringify([AD_FIELDS.PAGE_ID, AD_FIELDS.PAGE_NAME]),
+        access_token: ENV.META_LONG_TOKEN,
+        fields: JSON.stringify([
+          AD_FIELDS.PAGE_ID,
+          AD_FIELDS.PAGE_NAME,
+          AD_FIELDS.AD_START_TIME,
+        ]),
         /*
          * Search for ads based on the status.
          * Defaults to ACTIVE for all ads that are eligible for delivery.
@@ -97,7 +101,7 @@ export class MetaServices {
          * Language codes are based on the ISO 639-1 language codes and also includes ISO 639-3
          * language codes CMN and YUE.For instance ?languages=['es', 'en'].
          */
-        // languajes: [],
+        languajes: JSON.stringify(["es"]),
         /*
          * Search for ads based on whether they contain a specific type of media,
          * such as an image or video.
@@ -108,10 +112,7 @@ export class MetaServices {
          * such as Instagram or Facebook. You can provide one technology
          * or a comma-separatedlist of technologies.
          */
-        publisher_platforms: JSON.stringify([
-          AD_PUBLISHER_PLATFORMS.FACEBOOK,
-          AD_PUBLISHER_PLATFORMS.INSTAGRAM,
-        ]),
+        publisher_platforms: JSON.stringify([AD_PUBLISHER_PLATFORMS.FACEBOOK]),
         /*
          * Search for archived ads based on specific Facebook Page IDs.
          * You can provide up to ten IDs, separated by commas.

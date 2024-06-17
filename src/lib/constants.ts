@@ -12,6 +12,11 @@ export type AdsArchiveItem = {
   id: string;
   page_name: string;
   page_id: string;
+  ad_delivery_start_time: string;
+  address?: string;
+  phone?: string;
+  website?: string;
+  email?: string;
 };
 
 export type MetaApiPaging = {
@@ -334,6 +339,7 @@ export enum AD_SEARCH_TYPE {
 export enum AD_FIELDS {
   PAGE_ID = "page_id",
   PAGE_NAME = "page_name",
+  AD_START_TIME = "ad_delivery_start_time",
 }
 
 export type BUC_ITEM = {
