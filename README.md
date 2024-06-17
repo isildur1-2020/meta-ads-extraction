@@ -1,17 +1,15 @@
 # META ADS EXTRACTION
 
-## RUN
+### RUN
 
+`docker-compose build --no-cache`
 `docker-compose up -d`
 
-## UMOUNT DOCKER COMPOSE
+### LOGS
 
-`docker-compose down`
+`docker container logs -f <container_id>`
 
-## RUN FOR DEVELOPMENT
+### UMOUNT DOCKER COMPOSE
 
-`docker-compose --file docker-compose.dev.yml up`
-
-## UMOUNT FOR DEVELOPMENT
-
-`docker-compose --file docker-compose.dev.yml down`
+`docker-compose down --rmi all`
+`docker builder prune -f`

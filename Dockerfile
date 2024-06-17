@@ -1,4 +1,5 @@
 FROM node:22.3-alpine3.19 AS dev
+RUN apk add chromium
 WORKDIR /app
 COPY ./package.json .
 RUN yarn install --frozen-lockfile
@@ -16,6 +17,7 @@ COPY . .
 RUN npm run build
 
 FROM node:22.3-alpine3.19 AS prod
+RUN apk add chromium
 WORKDIR /app
 COPY .env .
 COPY tsconfig.json .

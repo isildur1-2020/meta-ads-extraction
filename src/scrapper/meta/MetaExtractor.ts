@@ -15,7 +15,7 @@ import { MetaScrapper } from "./MetaScrapper";
 import { getRandomNumber } from "../../lib/utils";
 
 export class MetaExtractor {
-  private counter = 1;
+  private counter = 0;
   private randomNumber: number = 0;
   private data_companies = new Map();
   private readonly ads_data_path = path.join(process.cwd(), "/src/output/");
