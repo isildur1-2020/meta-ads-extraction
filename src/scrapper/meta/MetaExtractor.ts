@@ -12,9 +12,11 @@ import { AxiosError } from "axios";
 import { ENV } from "../../config/Env";
 import { Ad } from "../../models/Ad";
 import { MetaScrapper } from "./MetaScrapper";
+import { getRandomNumber } from "../../lib/utils";
 
 export class MetaExtractor {
   private counter = 1;
+  private randomNumber: number = 0;
   private data_companies = new Map();
   private readonly ads_data_path = path.join(process.cwd(), "/src/output/");
 
@@ -34,10 +36,13 @@ export class MetaExtractor {
   }
 
   private async tryGetAdsArchive(config?: { after?: string }) {
+    this.randomNumber = getRandomNumber(100, 250);
     const { ads, headers, paging } = await MetaServices.getAdsArchive({
       ...this.config,
+      limit: this.randomNumber,
       after: config?.after,
     });
+    this.counter += this.randomNumber;
     this.printProgress(headers as MetaResponseHeaders);
     await this.persistAdsArchiveData(ads);
     await this.checkRateLimits(headers as MetaResponseHeaders);
@@ -72,11 +77,11 @@ export class MetaExtractor {
   }
 
   private printProgress(headers: MetaResponseHeaders) {
-    const { limit } = this.config;
-    Logger.printProgressMsg("\n\n\n");
-    Logger.printProgressMsg(
-      `-- LIMIT: ${limit}, ADS EXTRACTED: ${this.counter * limit} --`
+    Logger.printWarningMsg("-------------------------------------");
+    Logger.printWarningMsg(
+      `-- LIMIT: ${this.randomNumber}, ADS EXTRACTED: ${this.counter} --`
     );
+    Logger.printWarningMsg("-------------------------------------");
     this.printBUCStats(headers);
   }
 
@@ -123,6 +128,7 @@ export class MetaExtractor {
       if (existsAd !== null) return;
       const ad_data = await this.scrappingMetaPage(page_id);
       if (ad_data !== null) {
+        console.log(ad_data);
         await new Ad({ ...ad, ...ad_data }).save();
       }
     } catch (err: any) {

@@ -1,8 +1,10 @@
 import puppeteer, { Browser } from "puppeteer";
+// import randomUserAgent from "random-useragent";
+import { getRandomNumber } from "../../lib/utils";
 
 const config = {
   headless: true,
-  slowMo: 20,
+  slowMo: getRandomNumber(1, 30),
 };
 
 export class MetaScrapper {
@@ -13,6 +15,7 @@ export class MetaScrapper {
   }
   public static async extractMetaPageInfo(page_id: string) {
     const page = await this.browser.newPage();
+    // page.setUserAgent(randomUserAgent.getRandom());
     await page.goto(`https://www.facebook.com/${page_id}/`);
     return await page.evaluate(() => {
       const getClosestText = (props: {

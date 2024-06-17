@@ -355,7 +355,6 @@ export type BUC = {
 };
 
 export type MetaScrapperConfig = {
-  limit: number;
   search_terms: string;
   ad_delivery_date_min: string;
   ad_delivery_date_max: string;
