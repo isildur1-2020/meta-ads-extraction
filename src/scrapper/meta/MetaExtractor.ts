@@ -132,13 +132,15 @@ export class MetaExtractor {
   }
 
   private printAdInfo(ad: AdsArchiveItem & AdScrappedItem) {
-    const { page_id, address, email, phone, website } = ad;
+    const { page_id, address, email, phone, website, ad_delivery_start_time } =
+      ad;
     Logger.printWarningMsg("-----------------------------------------------");
     Logger.printWarningMsg(`-- PAGE: ${page_id}`);
     Logger.printWarningMsg(`-- PHONE: ${phone}`);
     Logger.printWarningMsg(`-- EMAIL: ${email}`);
     Logger.printWarningMsg(`-- ADRRESS: ${address}`);
     Logger.printWarningMsg(`-- WEBSITE: ${website}`);
+    Logger.printWarningMsg(`-- DELIVERY START TIME: ${ad_delivery_start_time}`);
     Logger.printWarningMsg("-----------------------------------------------");
   }
 

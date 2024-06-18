@@ -1,6 +1,11 @@
 # META ADS EXTRACTION
 
-### RUN
+### RUN WITH NPM
+
+`npm i`
+`npm run start`
+
+### RUN WITH DOCKER
 
 `docker-compose build --no-cache`
 `docker-compose up -d`
