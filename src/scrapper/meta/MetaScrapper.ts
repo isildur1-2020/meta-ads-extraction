@@ -11,12 +11,9 @@ export class MetaScrapper {
   }
 
   public static async extractMetaPageInfo(page_id: string) {
-    try {
-      await this.puppeteer.goto(`https://www.facebook.com/${page_id}/`);
-      return await this.puppeteer.evaluate(this.locatePageInfo);
-    } catch (err: any) {
-      console.log(err);
-    }
+    await this.puppeteer.goto(`https://www.facebook.com/${page_id}/`);
+    const ad_data = await this.puppeteer.evaluate(this.locatePageInfo);
+    return ad_data;
   }
 
   private static locatePageInfo() {

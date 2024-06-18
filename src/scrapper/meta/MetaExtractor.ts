@@ -51,8 +51,8 @@ export class MetaExtractor {
 
   private async checkRateLimits(headers: MetaResponseHeaders) {
     const { total_time, call_count } = this.getBUCInfo(headers);
-    if (total_time > 2 || call_count > 90) {
-      const minutesToSleep = 60 * 0.05;
+    if (total_time > 90 || call_count > 90) {
+      const minutesToSleep = 60 * 24;
       Logger.printErrMsg(`The app need sleep for ${minutesToSleep} minutes`);
       const intervalId = await this.scrapperToSleep(minutesToSleep);
       clearInterval(intervalId);
