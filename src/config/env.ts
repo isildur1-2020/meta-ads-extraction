@@ -6,4 +6,5 @@ export class ENV {
   public static MONGO_CLUSTER = process.env.MONGO_CLUSTER;
   public static SCRAPPER_SINCE_DATE = process.env.SCRAPPER_SINCE_DATE ?? "";
   public static SCRAPPER_UNTIL_DATE = process.env.SCRAPPER_UNTIL_DATE ?? "";
+  public static APP_ENV = process.env.APP_ENV ?? "";
 }

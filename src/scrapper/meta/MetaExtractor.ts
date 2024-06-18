@@ -51,8 +51,8 @@ export class MetaExtractor {
 
   private async checkRateLimits(headers: MetaResponseHeaders) {
     const { total_time, call_count } = this.getBUCInfo(headers);
-    if (total_time > 90 || call_count > 90) {
-      const minutesToSleep = 60 * 24;
+    if (total_time > 2 || call_count > 90) {
+      const minutesToSleep = 60 * 0.05;
       Logger.printErrMsg(`The app need sleep for ${minutesToSleep} minutes`);
       const intervalId = await this.scrapperToSleep(minutesToSleep);
       clearInterval(intervalId);
@@ -63,7 +63,7 @@ export class MetaExtractor {
     let counter = 1;
     const intervalId = setInterval(() => {
       const waitTime = minutes * 60 - counter;
-      Logger.printWarningMsg(`The app will start in ${waitTime} seconds...`);
+      Logger.printWarningMsg(`---- Wait Time: ${waitTime} ----`);
       counter++;
     }, 1000);
     return new Promise((resolve) => {
@@ -74,11 +74,11 @@ export class MetaExtractor {
   }
 
   private printProgress(headers: MetaResponseHeaders) {
-    Logger.printWarningMsg("-------------------------------------");
+    Logger.printWarningMsg("-----------------------------------------------");
     Logger.printWarningMsg(
       `-- ADS DOWNLOADED: ${this.randomNumber}, ADS EXTRACTED: ${this.counter} --`
     );
-    Logger.printWarningMsg("-------------------------------------");
+    Logger.printWarningMsg("-----------------------------------------------");
     this.printBUCStats(headers);
   }
 
@@ -89,14 +89,14 @@ export class MetaExtractor {
       total_cputime,
       estimated_time_to_regain_access,
     } = this.getBUCInfo(headers);
-    Logger.printWarningMsg("-------------------------------------");
+    Logger.printWarningMsg("-----------------------------------------------");
     Logger.printWarningMsg(`-- TOTAL PERCENTAGE: ${total_time}`);
     Logger.printWarningMsg(`-- CPU TIME: ${total_cputime}`);
     Logger.printWarningMsg(`-- CALL COUNT: ${call_count}`);
     Logger.printWarningMsg(
       `-- TIME TO WAIT: ${estimated_time_to_regain_access}`
     );
-    Logger.printWarningMsg("-------------------------------------");
+    Logger.printWarningMsg("-----------------------------------------------");
   }
 
   private getBUCInfo(headers: MetaResponseHeaders) {
@@ -133,17 +133,17 @@ export class MetaExtractor {
 
   private printAdInfo(ad: AdsArchiveItem & AdScrappedItem) {
     const { page_id, address, email, phone, website } = ad;
-    Logger.printWarningMsg("-------------------------------------");
+    Logger.printWarningMsg("-----------------------------------------------");
     Logger.printWarningMsg(`-- PAGE: ${page_id}`);
     Logger.printWarningMsg(`-- PHONE: ${phone}`);
     Logger.printWarningMsg(`-- EMAIL: ${email}`);
     Logger.printWarningMsg(`-- ADRRESS: ${address}`);
     Logger.printWarningMsg(`-- WEBSITE: ${website}`);
-    Logger.printWarningMsg("-------------------------------------");
+    Logger.printWarningMsg("-----------------------------------------------");
   }
 
   private async scrappingMetaPage(page_id: string) {
-    Logger.printProgressMsg(`[SCRAPPING] Page i\d: ${page_id}`);
+    Logger.printProgressMsg(`[SCRAPPING] PAGE ID ${page_id}`);
     return await MetaScrapper.extractMetaPageInfo(page_id);
   }
 }

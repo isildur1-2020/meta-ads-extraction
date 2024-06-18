@@ -1,37 +1,19 @@
-import puppeteer, { Browser, Page } from "puppeteer";
-import { getRandomNumber } from "../../lib/utils";
-import { AdScrappedItem, ScrapperHTMLItem } from "../../lib/constants";
-
-const config = {
-  headless: true,
-  slowMo: getRandomNumber(1, 20),
-};
-
-// const config = {
-//   headless: true,
-//   executablePath: "/usr/bin/chromium",
-//   slowMo: getRandomNumber(1, 20),
-//   args: ["--no-sandbox", "--disable-setuid-sandbox"],
-// };
+import { ScrapperHTMLItem } from "../../lib/constants";
+import { Puppeteer, PuppeteerImp } from "../../lib/Puppeteer";
 
 export class MetaScrapper {
-  private static browser: Browser | null = null;
-  private static page: Page | null = null;
+  private static puppeteer: PuppeteerImp;
 
   public static async init() {
-    try {
-      await this.openBrowser();
-      await this.openPage();
-    } catch (err: any) {
-      console.log(err);
-    }
+    this.puppeteer = new Puppeteer();
+    await this.puppeteer.launchBrowser();
+    await this.puppeteer.openPage();
   }
 
   public static async extractMetaPageInfo(page_id: string) {
     try {
-      await this.goto(`https://www.facebook.com/${page_id}/`);
-      if (!this.page) return null;
-      return await this.evaluate(this.locatePageInfo);
+      await this.puppeteer.goto(`https://www.facebook.com/${page_id}/`);
+      return await this.puppeteer.evaluate(this.locatePageInfo);
     } catch (err: any) {
       console.log(err);
     }
@@ -90,38 +72,5 @@ export class MetaScrapper {
       address: getClosestText(addressClasses),
       website: getClosestText(websiteClasses),
     };
-  }
-
-  private static async evaluate(onEvaluate: () => AdScrappedItem | null) {
-    if (this.page) {
-      return await this.page.evaluate(onEvaluate);
-    }
-    return null;
-  }
-
-  private static async openPage() {
-    if (this.browser) {
-      const page = await this.browser.newPage();
-      this.setPage(page);
-    }
-  }
-
-  private static async openBrowser() {
-    const browser = await puppeteer.launch(config);
-    this.setBrowser(browser);
-  }
-
-  private static async goto(URL: string) {
-    if (this.page) {
-      await this.page.goto(URL);
-    }
-  }
-
-  private static setBrowser(browser: Browser) {
-    this.browser = browser;
-  }
-
-  private static setPage(page: Page) {
-    this.page = page;
   }
 }
