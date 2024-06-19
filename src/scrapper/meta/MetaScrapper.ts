@@ -1,22 +1,25 @@
 import { ScrapperHTMLItem } from "../../lib/constants";
-import { Puppeteer, PuppeteerImp } from "../../lib/Puppeteer";
+import { Puppeteer } from "../../lib/Puppeteer";
 
 export class MetaScrapper {
-  private static puppeteer: PuppeteerImp;
+  private puppeteer: Puppeteer;
 
-  public static async init() {
+  constructor() {
     this.puppeteer = new Puppeteer();
+  }
+
+  public async init() {
     await this.puppeteer.launchBrowser();
     await this.puppeteer.openPage();
   }
 
-  public static async extractMetaPageInfo(page_id: string) {
+  public async extractMetaPageInfo(page_id: string) {
     await this.puppeteer.goto(`https://www.facebook.com/${page_id}/`);
     const ad_data = await this.puppeteer.evaluate(this.locatePageInfo);
     return ad_data;
   }
 
-  private static locatePageInfo() {
+  private locatePageInfo() {
     const getClosestText = (props: ScrapperHTMLItem): string => {
       const { iconClass, parentClass, contentClass } = props;
       const iconNode = document.querySelector(iconClass);

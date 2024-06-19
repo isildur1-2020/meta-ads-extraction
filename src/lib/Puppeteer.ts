@@ -1,55 +1,63 @@
-import puppeteer, { Browser, Page } from "puppeteer";
+import puppeteer, { Browser, Page, PuppeteerLaunchOptions } from "puppeteer";
 import { getRandomNumber } from "./utils";
 import { ENV } from "../config/Env";
 import { Logger } from "./logs";
 
-export type PuppeteerImp = {
-  launchBrowser: () => Promise<Browser | null>;
-  openPage: () => Promise<Page | null>;
-  goto: (URL: string) => Promise<void>;
-  evaluate: <T>(handleEvaluate: () => T) => Promise<T | null>;
-};
-
-export class Puppeteer implements PuppeteerImp {
+export class Puppeteer {
   private browser: Browser | null = null;
   private page: Page | null = null;
-  private configDev = {
-    headless: true,
-    slowMo: getRandomNumber(1, 20),
-  };
-  private configProd = {
-    ...this.configDev,
-    executablePath: "/usr/bin/chromium",
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  };
-  private config = ENV.APP_ENV === "dev" ? this.configDev : this.configProd;
+  private launchOptions: PuppeteerLaunchOptions;
+
+  constructor() {
+    this.launchOptions = this.init();
+  }
+
+  private init() {
+    const configDev = {
+      headless: false,
+      slowMo: getRandomNumber(1, 20),
+      // args: [`--proxy-server=${getRandomProxie()}`],
+    };
+    const configProd = {
+      headless: false,
+      slowMo: getRandomNumber(1, 20),
+      executablePath: "/usr/bin/chromium",
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    };
+    if (ENV.APP_ENV === "dev") return configDev;
+    return configProd;
+  }
 
   public async launchBrowser() {
     try {
-      Logger.printProgressMsg("-> Starting browser...");
+      Logger.printProgressMsg("[PUPPETEER] Starting browser...");
       const browser = await this.tryLaunchBrowser();
-      Logger.printProgressMsg("-> Browser started.");
       return browser;
     } catch (err: any) {
-      const message = `Err: Launch browser\n${err}`;
+      const message = `[PUPPETEER] Err: Launch browser\n${err}`;
       throw new Error(message);
     }
   }
 
   private async tryLaunchBrowser() {
-    const browser = await puppeteer.launch(this.config);
+    const browser = await puppeteer.launch(this.launchOptions);
     this.setBrowser(browser);
     return this.browser;
   }
 
+  public async closeBrowser() {
+    if (this.browser) {
+      await this.browser.close();
+    }
+  }
+
   public async openPage() {
     try {
-      Logger.printProgressMsg("-> Opening page...");
+      Logger.printProgressMsg("[PUPPETEER] Opening page...");
       const page = await this.tryOpenPage();
-      Logger.printProgressMsg("-> Page opened.");
       return page;
     } catch (err: any) {
-      const message = `Err: Open Page\n${err}`;
+      const message = `[PUPPETEER] Err: Open Page\n${err}`;
       throw new Error(message);
     }
   }
@@ -65,7 +73,7 @@ export class Puppeteer implements PuppeteerImp {
     try {
       await this.tryGoto(URL);
     } catch (err: any) {
-      const message = `Err: goto\n${err}`;
+      const message = `[PUPPETEER] Err: goto\n${err}`;
       throw new Error(message);
     }
   }
@@ -80,7 +88,7 @@ export class Puppeteer implements PuppeteerImp {
     try {
       return await this.tryEvaluate(handleEvaluate);
     } catch (err: any) {
-      const message = `Err: evaluate\n${err}`;
+      const message = `[PUPPETEER] Err: evaluate\n${err}`;
       throw new Error(message);
     }
   }

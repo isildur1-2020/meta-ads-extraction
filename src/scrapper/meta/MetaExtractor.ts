@@ -19,15 +19,21 @@ export class MetaExtractor {
   private rateLimits: BUC_ITEM | null = null;
   private config: MetaScrapperConfig;
   private companyService: CompanyService;
+  private metaScrapper: MetaScrapper;
 
-  constructor(config: MetaScrapperConfig, companyService: CompanyService) {
+  constructor(
+    config: MetaScrapperConfig,
+    companyService: CompanyService,
+    metaScrapper: MetaScrapper
+  ) {
     this.config = config;
     this.companyService = companyService;
+    this.metaScrapper = metaScrapper;
   }
 
   public async getAdsArchive() {
     try {
-      await MetaScrapper.init();
+      await this.metaScrapper.init();
       await this.tryGetAdsArchive();
     } catch (err: any) {
       if (err instanceof AxiosError) {
@@ -50,7 +56,8 @@ export class MetaExtractor {
 
     this.setRateLimits(headers as MetaResponseHeaders);
     this.printProgress();
-    await this.persistAdsData(ads);
+    const clearedAds = this.clearAds(ads);
+    await this.persistAdsData(clearedAds);
     await this.checkRateLimits();
 
     if (paging?.next) {
@@ -81,6 +88,17 @@ export class MetaExtractor {
         `-- ESTIMATED WAIT TIME: ${estimated_time_to_regain_access}\n` +
         `---------------------------------------------------\n`
     );
+  }
+
+  private clearAds(ads: AdsArchiveItem[]): AdsArchiveItem[] {
+    const adsIndexed = ads.reduce((prev, curr) => {
+      const { page_id } = curr;
+      return {
+        ...prev,
+        [page_id]: curr,
+      };
+    }, {});
+    return Object.values(adsIndexed);
   }
 
   private async checkRateLimits() {
@@ -122,21 +140,18 @@ export class MetaExtractor {
     for (let ad of ads) {
       const { page_id } = ad;
       const companyFound = await this.companyService.findByPageId(page_id);
-      if (companyFound === null) {
-        await this.scrappingPage(ad);
-      }
-    }
-  }
-
-  private async scrappingPage(ad: AdsArchiveItem) {
-    const { page_id } = ad;
-    Logger.printProgressMsg(`[SCRAPPING] PAGE ID ${page_id}`);
-    const companyData = await MetaScrapper.extractMetaPageInfo(page_id);
-    if (companyData) {
+      if (companyFound) continue;
+      const companyData = await this.scrappingPage(page_id);
+      if (!companyData) continue;
       const payload = { ...ad, ...companyData };
       this.printAdInfo(payload);
       await this.companyService.create(payload);
     }
+  }
+
+  private async scrappingPage(page_id: string) {
+    Logger.printProgressMsg(`[SCRAPPING] PAGE ID ${page_id}`);
+    return await this.metaScrapper.extractMetaPageInfo(page_id);
   }
 
   private printAdInfo(ad: AdsArchiveItem & AdScrappedItem) {
