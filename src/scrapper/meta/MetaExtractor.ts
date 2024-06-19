@@ -123,22 +123,19 @@ export class MetaExtractor {
       const { page_id } = ad;
       const companyFound = await this.companyService.findByPageId(page_id);
       if (companyFound === null) {
-        await this.persistAdsOnDB(ad);
+        await this.scrappingPage(ad);
       }
     }
   }
 
-  private async persistAdsOnDB(ad: AdsArchiveItem) {
-    try {
-      const { page_id } = ad;
-      const ad_data = await this.scrappingMetaPage(page_id);
-      if (ad_data !== null) {
-        const payload = { ...ad, ...ad_data };
-        this.printAdInfo(payload);
-        await this.companyService.create(payload);
-      }
-    } catch (err: any) {
-      console.log(err);
+  private async scrappingPage(ad: AdsArchiveItem) {
+    const { page_id } = ad;
+    Logger.printProgressMsg(`[SCRAPPING] PAGE ID ${page_id}`);
+    const companyData = await MetaScrapper.extractMetaPageInfo(page_id);
+    if (companyData) {
+      const payload = { ...ad, ...companyData };
+      this.printAdInfo(payload);
+      await this.companyService.create(payload);
     }
   }
 
@@ -153,11 +150,6 @@ export class MetaExtractor {
     Logger.printWarningMsg(`-- WEBSITE: ${website}`);
     Logger.printWarningMsg(`-- DELIVERY START TIME: ${ad_delivery_start_time}`);
     Logger.printWarningMsg("-----------------------------------------------");
-  }
-
-  private async scrappingMetaPage(page_id: string) {
-    Logger.printProgressMsg(`[SCRAPPING] PAGE ID ${page_id}`);
-    return await MetaScrapper.extractMetaPageInfo(page_id);
   }
 
   private setRandomNumber(num: number) {
