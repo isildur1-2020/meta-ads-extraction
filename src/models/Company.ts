@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const adSchema = new mongoose.Schema(
+const companySchema = new mongoose.Schema(
   {
     page_name: String,
     page_id: String,
@@ -13,4 +13,4 @@ const adSchema = new mongoose.Schema(
   { timestamps: false }
 );
 
-export const Ad = mongoose.model("Ad", adSchema);
+export const Company = mongoose.model("Company", companySchema);

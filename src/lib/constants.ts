@@ -1,3 +1,5 @@
+import { Document } from "mongoose";
+
 export type Args = {
   since: string;
   until: string;
@@ -13,6 +15,16 @@ export type AdScrappedItem = {
   phone?: string;
   website?: string;
   email?: string;
+};
+
+export type ICompany = {
+  page_name: String;
+  page_id: String;
+  ad_delivery_start_time: String;
+  address: String;
+  phone: String;
+  email: String;
+  website: String;
 };
 
 export interface AdsArchiveItem extends AdScrappedItem {

@@ -9,15 +9,21 @@ import { Logger } from "../../lib/logs";
 import { MetaServices } from "../../services/MetaService";
 import { AxiosError } from "axios";
 import { ENV } from "../../config/Env";
-import { Ad } from "../../models/Ad";
 import { MetaScrapper } from "./MetaScrapper";
 import { getRandomNumber } from "../../lib/utils";
+import { CompanyService } from "../../services/CompanyService";
 
 export class MetaExtractor {
-  private counter = 0;
+  private adsExtracted = 0;
   private randomNumber: number = 0;
+  private rateLimits: BUC_ITEM | null = null;
+  private config: MetaScrapperConfig;
+  private companyService: CompanyService;
 
-  constructor(private config: MetaScrapperConfig) {}
+  constructor(config: MetaScrapperConfig, companyService: CompanyService) {
+    this.config = config;
+    this.companyService = companyService;
+  }
 
   public async getAdsArchive() {
     try {
@@ -33,37 +39,76 @@ export class MetaExtractor {
   }
 
   private async tryGetAdsArchive(config?: { after?: string }) {
-    this.randomNumber = getRandomNumber(100, 250);
-    const { ads, headers, paging } = await MetaServices.getAdsArchive({
+    this.generateRandomNumber();
+    const adsArchive = await MetaServices.getAdsArchive({
       ...this.config,
       limit: this.randomNumber,
       after: config?.after,
     });
-    this.counter += this.randomNumber;
-    this.printProgress(headers as MetaResponseHeaders);
-    await this.persistAdsArchiveData(ads);
-    await this.checkRateLimits(headers as MetaResponseHeaders);
+    this.adsExtracted += this.randomNumber;
+    const { ads, headers, paging } = adsArchive;
+
+    this.setRateLimits(headers as MetaResponseHeaders);
+    this.printProgress();
+    await this.persistAdsData(ads);
+    await this.checkRateLimits();
+
     if (paging?.next) {
       this.tryGetAdsArchive({ after: paging.cursors.after });
-      this.counter++;
     }
   }
 
-  private async checkRateLimits(headers: MetaResponseHeaders) {
-    const { total_time, call_count } = this.getBUCInfo(headers);
+  private generateRandomNumber() {
+    const randomNumber = getRandomNumber(100, 250);
+    this.setRandomNumber(randomNumber);
+  }
+
+  private printProgress() {
+    if (!this.rateLimits) return;
+    const {
+      total_time,
+      call_count,
+      total_cputime,
+      estimated_time_to_regain_access,
+    } = this.rateLimits;
+    Logger.printWarningMsg(
+      `\n---------------------------------------------------\n` +
+        `-- ADS EXTRACTED: ${this.randomNumber}\n` +
+        `-- TOTAL ADS EXTRACTED: ${this.adsExtracted}\n` +
+        `-- TOTAL PERCENTAGE: ${total_time}\n` +
+        `-- CPU TIME: ${total_cputime}\n` +
+        `-- CALL COUNT: ${call_count}\n` +
+        `-- ESTIMATED WAIT TIME: ${estimated_time_to_regain_access}\n` +
+        `---------------------------------------------------\n`
+    );
+  }
+
+  private async checkRateLimits() {
+    if (!this.rateLimits) return;
+    const { total_time, call_count } = this.rateLimits;
     if (total_time > 90 || call_count > 90) {
       const minutesToSleep = 60 * 24;
-      Logger.printErrMsg(`The app need sleep for ${minutesToSleep} minutes`);
+      Logger.printErrMsg(
+        `[IMPORTANT] THE APP NEED TO SLEEP FOR ${minutesToSleep} MINUTES...`
+      );
       const intervalId = await this.scrapperToSleep(minutesToSleep);
       clearInterval(intervalId);
     }
   }
 
+  private getRateLimits(headers: MetaResponseHeaders) {
+    if (!ENV.SCRAPPER_ID) {
+      throw new Error("SCRAPPER_ID must defined");
+    }
+    const limits = JSON.parse(headers["x-business-use-case-usage"]);
+    return limits[ENV.SCRAPPER_ID][0] as BUC_ITEM;
+  }
+
   private scrapperToSleep(minutes: number): Promise<NodeJS.Timeout> {
-    let counter = 1;
+    let counter = 0;
     const intervalId = setInterval(() => {
       const waitTime = minutes * 60 - counter;
-      Logger.printWarningMsg(`---- Wait Time: ${waitTime} ----`);
+      Logger.printWarningMsg(`[SLEEPING] WAIT TIME: ${waitTime}`);
       counter++;
     }, 1000);
     return new Promise((resolve) => {
@@ -73,45 +118,11 @@ export class MetaExtractor {
     });
   }
 
-  private printProgress(headers: MetaResponseHeaders) {
-    Logger.printWarningMsg("-----------------------------------------------");
-    Logger.printWarningMsg(
-      `-- ADS DOWNLOADED: ${this.randomNumber}, ADS EXTRACTED: ${this.counter} --`
-    );
-    Logger.printWarningMsg("-----------------------------------------------");
-    this.printBUCStats(headers);
-  }
-
-  private printBUCStats(headers: MetaResponseHeaders) {
-    const {
-      total_time,
-      call_count,
-      total_cputime,
-      estimated_time_to_regain_access,
-    } = this.getBUCInfo(headers);
-    Logger.printWarningMsg("-----------------------------------------------");
-    Logger.printWarningMsg(`-- TOTAL PERCENTAGE: ${total_time}`);
-    Logger.printWarningMsg(`-- CPU TIME: ${total_cputime}`);
-    Logger.printWarningMsg(`-- CALL COUNT: ${call_count}`);
-    Logger.printWarningMsg(
-      `-- TIME TO WAIT: ${estimated_time_to_regain_access}`
-    );
-    Logger.printWarningMsg("-----------------------------------------------");
-  }
-
-  private getBUCInfo(headers: MetaResponseHeaders) {
-    if (!ENV.SCRAPPER_ID) {
-      throw new Error("SCRAPPER_ID must defined");
-    }
-    const limits = JSON.parse(headers["x-business-use-case-usage"]);
-    return limits[ENV.SCRAPPER_ID][0] as BUC_ITEM;
-  }
-
-  private async persistAdsArchiveData(ads: AdsArchiveItem[]) {
+  private async persistAdsData(ads: AdsArchiveItem[]) {
     for (let ad of ads) {
       const { page_id } = ad;
-      const adFound = await Ad.findOne({ page_id });
-      if (adFound === null) {
+      const companyFound = await this.companyService.findByPageId(page_id);
+      if (companyFound === null) {
         await this.persistAdsOnDB(ad);
       }
     }
@@ -124,7 +135,7 @@ export class MetaExtractor {
       if (ad_data !== null) {
         const payload = { ...ad, ...ad_data };
         this.printAdInfo(payload);
-        await new Ad(payload).save();
+        await this.companyService.create(payload);
       }
     } catch (err: any) {
       console.log(err);
@@ -147,5 +158,14 @@ export class MetaExtractor {
   private async scrappingMetaPage(page_id: string) {
     Logger.printProgressMsg(`[SCRAPPING] PAGE ID ${page_id}`);
     return await MetaScrapper.extractMetaPageInfo(page_id);
+  }
+
+  private setRandomNumber(num: number) {
+    this.randomNumber = num;
+  }
+
+  private setRateLimits(headers: MetaResponseHeaders) {
+    const rateLimits = this.getRateLimits(headers);
+    this.rateLimits = rateLimits;
   }
 }
