@@ -4,8 +4,6 @@ export class ENV {
   public static MONGO_USER = process.env.MONGO_USER;
   public static MONGO_PASSWORD = process.env.MONGO_PASSWORD;
   public static MONGO_CLUSTER = process.env.MONGO_CLUSTER;
-  public static SCRAPPER_SINCE_DATE = process.env.SCRAPPER_SINCE_DATE ?? "";
-  public static SCRAPPER_UNTIL_DATE = process.env.SCRAPPER_UNTIL_DATE ?? "";
   public static APP_ENV = process.env.APP_ENV ?? "";
   public static META_USERNAME = process.env.META_USERNAME ?? "";
   public static META_PASSWORD = process.env.META_PASSWORD ?? "";

@@ -1,10 +1,3 @@
-import { Document } from "mongoose";
-
-export type Args = {
-  since: string;
-  until: string;
-};
-
 export type MetaApiResponse<T> = {
   data: T[];
   paging: MetaApiPaging;

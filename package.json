@@ -23,18 +23,14 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.12.13",
-    "@types/random-useragent": "^0.3.3",
     "concurrently": "^8.2.2",
     "rimraf": "^5.0.7",
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@types/yargs": "^17.0.32",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "mongoose": "^8.4.1",
-    "puppeteer": "^22.11.0",
-    "yargs": "^17.7.2",
-    "zod": "^3.23.8"
+    "puppeteer": "^22.11.0"
   }
 }
