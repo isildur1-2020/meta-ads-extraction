@@ -11,6 +11,7 @@ const companySchema = new mongoose.Schema(
     website: String,
     search_terms: String,
     ad_snapshot_url: String,
+    was_used: Boolean,
   },
   { timestamps: false }
 );
