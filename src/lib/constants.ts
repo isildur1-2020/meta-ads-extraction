@@ -25,6 +25,7 @@ export interface AdsArchiveItem extends AdScrappedItem {
   page_name: string;
   page_id: string;
   ad_delivery_start_time: string;
+  ad_snapshot_url: string;
 }
 
 export type MetaApiPaging = {
@@ -351,6 +352,7 @@ export enum AD_FIELDS {
   PAGE_ID = "page_id",
   PAGE_NAME = "page_name",
   AD_START_TIME = "ad_delivery_start_time",
+  AD_URL = "ad_snapshot_url",
 }
 
 export type BUC_ITEM = {

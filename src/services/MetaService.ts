@@ -34,6 +34,7 @@ export class MetaServices {
           AD_FIELDS.PAGE_ID,
           AD_FIELDS.PAGE_NAME,
           AD_FIELDS.AD_START_TIME,
+          AD_FIELDS.AD_URL,
         ]),
         /*
          * Search for ads based on the status.

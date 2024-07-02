@@ -132,7 +132,8 @@ export class MetaExtractor {
       if (companyFound) continue;
       const companyData = await this.scrappingPage(page_id);
       if (!companyData) continue;
-      const payload = { ...ad, ...companyData };
+      const { search_terms } = this.config;
+      const payload = { ...ad, ...companyData, search_terms };
       this.printAdInfo(payload);
       await this.companyService.create(payload);
     }

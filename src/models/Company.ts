@@ -9,6 +9,8 @@ const companySchema = new mongoose.Schema(
     phone: String,
     email: String,
     website: String,
+    search_terms: String,
+    ad_snapshot_url: String,
   },
   { timestamps: false }
 );
