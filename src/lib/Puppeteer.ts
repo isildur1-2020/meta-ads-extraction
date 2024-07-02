@@ -1,7 +1,6 @@
 import puppeteer, { Browser, Page, PuppeteerLaunchOptions } from "puppeteer";
-import { getRandomNumber } from "./utils";
-import { ENV } from "../config/Env";
 import { Logger } from "./logs";
+import { puppeteerConfig } from "../config/puppeteer";
 
 export class Puppeteer {
   private browser: Browser | null = null;
@@ -9,23 +8,7 @@ export class Puppeteer {
   private launchOptions: PuppeteerLaunchOptions;
 
   constructor() {
-    this.launchOptions = this.init();
-  }
-
-  private init() {
-    const configDev = {
-      headless: false,
-      slowMo: getRandomNumber(1, 40),
-      // args: [`--proxy-server=${getRandomProxie()}`],
-    };
-    const configProd = {
-      headless: true,
-      slowMo: getRandomNumber(1, 30),
-      executablePath: "/usr/bin/chromium",
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    };
-    if (ENV.APP_ENV === "dev") return configDev;
-    return configProd;
+    this.launchOptions = puppeteerConfig();
   }
 
   public async launchBrowser() {

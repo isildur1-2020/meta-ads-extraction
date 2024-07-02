@@ -55,7 +55,10 @@ export type AdsArchiveServiceFullParams = {
 
 export type AdsArchiveServiceParams = Pick<
   AdsArchiveServiceFullParams,
-  "ad_delivery_date_min" | "ad_delivery_date_max" | "search_terms"
+  | "ad_delivery_date_min"
+  | "ad_delivery_date_max"
+  | "search_terms"
+  | "ad_reached_countries"
 >;
 
 export enum AD_ACTIVE_STATUS {
@@ -366,6 +369,7 @@ export type MetaScrapperConfig = {
   search_terms: string;
   ad_delivery_date_min: string;
   ad_delivery_date_max: string;
+  ad_reached_countries: AD_COUNTRIES[];
 };
 
 export type MetaResponseHeaders = {

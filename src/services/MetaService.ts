@@ -21,6 +21,7 @@ export class MetaServices {
       search_terms,
       ad_delivery_date_min,
       ad_delivery_date_max,
+      ad_reached_countries,
     } = config;
     const { data, headers } = await metaInstance.get<
       MetaApiResponse<AdsArchiveItem>
@@ -57,7 +58,7 @@ export class MetaServices {
          * or locations. Note: Ads that did not reach any location in the EU will only
          * returnif they are about social issues, elections or politics.
          */
-        ad_reached_countries: JSON.stringify([AD_COUNTRIES.ES]),
+        ad_reached_countries: JSON.stringify(ad_reached_countries),
         /*
          * Search by type of ad. You can use this to narrow your results to ads in special
          * ad categories: CREDIT_ADS returns ads related to financial products or institutions.

@@ -54,6 +54,9 @@ export class MetaExtractor {
     });
     this.adsExtracted += this.randomNumber;
     const { ads, headers, paging } = adsArchive;
+    if (ads.length === 0) {
+      throw new Error("[ADS REQUEST] EMPTY RESPONSE");
+    }
 
     this.setRateLimits(headers as MetaResponseHeaders);
     this.printProgress();

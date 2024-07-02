@@ -26,6 +26,9 @@ export class MetaScrapper {
     if (!this.isLogged) {
       await this.metaLogin();
     }
+    if (this.page) {
+      await this.page.mouse.wheel({ deltaY: 400 });
+    }
     const ad_data = await this.puppeteer.evaluate(this.locatePageInfo);
     return ad_data;
   }
@@ -101,13 +104,12 @@ export class MetaScrapper {
       contentClass:
         "span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.xlh3980.xvmahel.x1n0sxbx.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.x4zkp8e.x3x7a5m.x6prxxf.xvq8zen.xo1l8bm.x1qq9wsj.x1yc453h",
     };
-    const phone = getClosestText(phoneClasses);
     const email = getClosestText(emailClasses);
-    if (!phone && !email) return null;
+    if (!email) return null;
 
     return {
-      phone,
       email,
+      phone: getClosestText(phoneClasses),
       address: getClosestText(addressClasses),
       website: getClosestText(websiteClasses),
     };
