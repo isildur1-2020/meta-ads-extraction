@@ -57,7 +57,7 @@ export class Puppeteer {
       await this.tryGoto(URL);
     } catch (err: any) {
       const message = `[PUPPETEER] Err: goto\n${err}`;
-      throw new Error(message);
+      console.log(message, err);
     }
   }
 

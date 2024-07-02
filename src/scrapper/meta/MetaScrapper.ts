@@ -3,6 +3,7 @@ import { ScrapperHTMLItem } from "../../lib/constants";
 import { Puppeteer } from "../../lib/Puppeteer";
 import { ENV } from "../../config/Env";
 import { Logger } from "../../lib/logs";
+import { getRandomNumber } from "../../lib/utils";
 
 export class MetaScrapper {
   private puppeteer: Puppeteer;
@@ -27,7 +28,7 @@ export class MetaScrapper {
       await this.metaLogin();
     }
     if (this.page) {
-      await this.page.mouse.wheel({ deltaY: 400 });
+      await this.page.mouse.wheel({ deltaY: getRandomNumber(400, 600) });
     }
     const ad_data = await this.puppeteer.evaluate(this.locatePageInfo);
     return ad_data;

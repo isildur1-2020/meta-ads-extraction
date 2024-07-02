@@ -3,10 +3,8 @@ import { ENV } from "./Env";
 
 export const puppeteerConfig = () => {
   const configDev = {
-    headless: false,
-    slowMo: 250,
-    // slowMo: getRandomNumber(1, 40),
-    // args: [`--proxy-server=${getRandomProxie()}`],
+    headless: true,
+    slowMo: getRandomNumber(250, 300),
   };
   const configProd = {
     headless: true,

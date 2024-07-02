@@ -1,8 +1,8 @@
 import { AD_COUNTRIES } from "../lib/constants";
 export const metaExtractorConfig = {
   search_terms: "apps",
-  ad_delivery_date_min: "2024-05-04",
-  ad_delivery_date_max: "2024-05-05",
+  ad_delivery_date_min: "2024-07-01",
+  ad_delivery_date_max: "2024-07-01",
   ad_reached_countries: [
     AD_COUNTRIES.BR,
     AD_COUNTRIES.IN,
