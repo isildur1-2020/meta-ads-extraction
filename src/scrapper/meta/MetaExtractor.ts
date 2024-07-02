@@ -12,6 +12,7 @@ import { ENV } from "../../config/Env";
 import { MetaScrapper } from "./MetaScrapper";
 import { getRandomNumber } from "../../lib/utils";
 import { CompanyService } from "../../services/CompanyService";
+import { Slepper } from "../../lib/Slepper";
 
 export class MetaExtractor {
   private adsExtracted = 0;
@@ -109,8 +110,7 @@ export class MetaExtractor {
       Logger.printErrMsg(
         `[IMPORTANT] THE APP NEED TO SLEEP FOR ${minutesToSleep} MINUTES...`
       );
-      const intervalId = await this.scrapperToSleep(minutesToSleep);
-      clearInterval(intervalId);
+      await Slepper.wait({ minutes: minutesToSleep });
     }
   }
 
@@ -120,20 +120,6 @@ export class MetaExtractor {
     }
     const limits = JSON.parse(headers["x-business-use-case-usage"]);
     return limits[ENV.SCRAPPER_ID][0] as BUC_ITEM;
-  }
-
-  private scrapperToSleep(minutes: number): Promise<NodeJS.Timeout> {
-    let counter = 0;
-    const intervalId = setInterval(() => {
-      const waitTime = minutes * 60 - counter;
-      Logger.printWarningMsg(`[SLEEPING] WAIT TIME: ${waitTime}`);
-      counter++;
-    }, 1000);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(intervalId);
-      }, minutes * 60 * 1000);
-    });
   }
 
   private async persistAdsData(ads: AdsArchiveItem[]) {

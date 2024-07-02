@@ -15,7 +15,7 @@ export class Puppeteer {
   private init() {
     const configDev = {
       headless: false,
-      slowMo: getRandomNumber(1, 20),
+      slowMo: getRandomNumber(1, 40),
       // args: [`--proxy-server=${getRandomProxie()}`],
     };
     const configProd = {

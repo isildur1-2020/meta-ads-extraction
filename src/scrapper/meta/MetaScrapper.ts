@@ -1,22 +1,61 @@
+import { Browser, Page } from "puppeteer";
 import { ScrapperHTMLItem } from "../../lib/constants";
 import { Puppeteer } from "../../lib/Puppeteer";
+import { ENV } from "../../config/Env";
+import { Logger } from "../../lib/logs";
 
 export class MetaScrapper {
   private puppeteer: Puppeteer;
+  private page: Page | null = null;
+  private browser: Browser | null = null;
+  private isLogged = false;
 
   constructor() {
     this.puppeteer = new Puppeteer();
   }
 
   public async init() {
-    await this.puppeteer.launchBrowser();
-    await this.puppeteer.openPage();
+    this.browser = await this.puppeteer.launchBrowser();
+    this.page = await this.puppeteer.openPage();
   }
 
   public async extractMetaPageInfo(page_id: string) {
-    await this.puppeteer.goto(`https://www.facebook.com/${page_id}/`);
+    const target = `https://www.facebook.com/${page_id}/`;
+    await this.puppeteer.goto(target);
+    await this.overridePermissions(target);
+    if (!this.isLogged) {
+      await this.metaLogin();
+    }
     const ad_data = await this.puppeteer.evaluate(this.locatePageInfo);
     return ad_data;
+  }
+
+  public async metaLogin() {
+    if (!this.page) return null;
+
+    await this.page.waitForSelector("#email");
+    Logger.printProgressMsg("[SCRAPPING] TYPING EMAIL...");
+    await this.page.type("#email", ENV.META_USERNAME);
+
+    await this.page.waitForSelector("#pass");
+    Logger.printProgressMsg("[SCRAPPING] TYPING PASSWORD...");
+    await this.page.type("#pass", ENV.META_PASSWORD);
+
+    await this.page.waitForSelector("#loginbutton");
+    Logger.printProgressMsg("[SCRAPPING] SUBMIT LOGIN...");
+    await Promise.all([
+      this.page.click("#loginbutton"),
+      this.page.waitForNavigation(),
+    ]);
+
+    this.isLogged = true;
+  }
+
+  public async overridePermissions(target: string) {
+    if (this.browser) {
+      const context = this.browser.defaultBrowserContext();
+      await context.overridePermissions(target, []);
+    }
   }
 
   private locatePageInfo() {
