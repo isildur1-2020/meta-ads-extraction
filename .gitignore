@@ -5,3 +5,5 @@ src/output
 .DS_Store
 .AppleDouble
 .LSOverride
+mongo-init.js
+mongo-data

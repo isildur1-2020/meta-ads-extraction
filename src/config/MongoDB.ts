@@ -5,7 +5,7 @@ import { Logger } from "../lib/logs";
 export class MongoDB {
   public static async connect() {
     try {
-      const URL = `mongodb+srv://${ENV.MONGO_USER}:${ENV.MONGO_PASSWORD}@${ENV.MONGO_CLUSTER}/`;
+      const URL = `mongodb://${ENV.MONGO_USER}:${ENV.MONGO_PASSWORD}@localhost:27017/${ENV.MONGO_DATABASE}`;
       await mongoose.connect(URL);
       Logger.printProgressMsg("MongoDB Atlas connected successfully");
     } catch (err: any) {
