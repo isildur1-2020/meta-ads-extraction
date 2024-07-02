@@ -19,8 +19,8 @@ export class Puppeteer {
       // args: [`--proxy-server=${getRandomProxie()}`],
     };
     const configProd = {
-      headless: false,
-      slowMo: getRandomNumber(1, 20),
+      headless: true,
+      slowMo: getRandomNumber(1, 30),
       executablePath: "/usr/bin/chromium",
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     };
