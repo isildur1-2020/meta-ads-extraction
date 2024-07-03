@@ -71,7 +71,7 @@ export class MetaExtractor {
 
   private generateRandomNumber() {
     const randomNumber = getRandomNumber(100, 250);
-    this.setRandomNumber(20);
+    this.setRandomNumber(randomNumber);
   }
 
   private printProgress() {

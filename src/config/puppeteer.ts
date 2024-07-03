@@ -4,7 +4,7 @@ import { ENV } from "./Env";
 
 export const puppeteerConfig = () => {
   const configDev: PuppeteerLaunchOptions = {
-    headless: false,
+    headless: true,
     slowMo: getRandomNumber(150, 250),
     args: ["--window-size=800,700"],
   };
