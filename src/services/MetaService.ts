@@ -6,7 +6,6 @@ import {
   AD_LANGUAGES,
   AD_MEDIA_TYPE,
   AD_PUBLISHER_PLATFORMS,
-  AD_SEARCH_TYPE,
   AD_TYPE,
   AdsArchiveItem,
   AdsArchiveServiceParams,
@@ -130,7 +129,7 @@ export class MetaServices {
          * The limit of your string is 100 characters or less.
          * Use search_type to adjust the type of search to use.
          */
-        search_terms,
+        search_terms: JSON.stringify(search_terms),
         /*
          * Default value: KEYWORD_UNORDERED
          * The type of search to use for the search_terms field.
@@ -141,7 +140,7 @@ export class MetaServices {
          * To search for multiple phrases at once, separate groups of words in search_terms by commas.
          * This will retrieve results that contain an exact match for every phrase.
          */
-        search_type: AD_SEARCH_TYPE.KEYWORD_UNORDERED,
+        // search_type: AD_SEARCH_TYPE.KEYWORD_UNORDERED,
         /*
          * Default value: false
          * Specify whether you would like your results to reveal content

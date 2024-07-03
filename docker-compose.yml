@@ -10,11 +10,9 @@ services:
     image: meta-ads-extraction-prod
     container_name: meta-ads-extraction-prod
     environment:
-      META_LONG_TOKEN: ${META_LONG_TOKEN}
-      SCRAPPER_ID: ${SCRAPPER_ID}
+      APP_ENV: "prod"
       MONGO_USER: ${MONGO_USER}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       MONGO_DATABASE: ${MONGO_DATABASE}
-      SCRAPPER_SINCE_DATE: ${SCRAPPER_SINCE_DATE}
-      SCRAPPER_UNTIL_DATE: ${SCRAPPER_UNTIL_DATE}
-      APP_ENV: "prod"
+      SCRAPPER_ID: ${SCRAPPER_ID}
+      META_LONG_TOKEN: ${META_LONG_TOKEN}

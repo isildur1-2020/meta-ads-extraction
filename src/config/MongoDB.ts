@@ -5,7 +5,10 @@ import { Logger } from "../lib/logs";
 export class MongoDB {
   public static async connect() {
     try {
-      const URL = `mongodb://${ENV.MONGO_USER}:${ENV.MONGO_PASSWORD}@localhost:27017/${ENV.MONGO_DATABASE}`;
+      const URL =
+        ENV.APP_ENV === "dev"
+          ? `mongodb://${ENV.MONGO_USER}:${ENV.MONGO_PASSWORD}@localhost:27017/${ENV.MONGO_DATABASE}`
+          : `mongodb+srv://isildur1:MoiCvj48CJ28ow@cluster0.dv1hyol.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
       await mongoose.connect(URL);
       Logger.printProgressMsg("MongoDB Atlas connected successfully");
     } catch (err: any) {

@@ -55,7 +55,7 @@ export class MetaExtractor {
     this.adsExtracted += this.randomNumber;
     const { ads, headers, paging } = adsArchive;
     if (ads.length === 0) {
-      throw new Error("[ADS REQUEST] EMPTY RESPONSE");
+      throw new Error("[META EXTRACTION] THERE IS NOT MORE RESULTS");
     }
 
     this.setRateLimits(headers as MetaResponseHeaders);
@@ -71,7 +71,7 @@ export class MetaExtractor {
 
   private generateRandomNumber() {
     const randomNumber = getRandomNumber(100, 250);
-    this.setRandomNumber(randomNumber);
+    this.setRandomNumber(20);
   }
 
   private printProgress() {

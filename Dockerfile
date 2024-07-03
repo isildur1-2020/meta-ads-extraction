@@ -17,7 +17,8 @@ COPY . .
 RUN npm run build
 
 FROM node:22.3-alpine3.19 AS prod
-RUN apk add chromium
+RUN apk add --no-cache chromium tzdata
+ENV TZ=America/Bogota
 WORKDIR /app
 COPY .env .
 COPY tsconfig.json .

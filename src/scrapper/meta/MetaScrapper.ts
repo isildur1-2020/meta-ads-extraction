@@ -22,14 +22,16 @@ export class MetaScrapper {
 
   public async extractMetaPageInfo(page_id: string) {
     const target = `https://www.facebook.com/${page_id}/`;
-    await this.puppeteer.goto(target);
+    // TO DO, IMPROVE OVERRIDE PERMISSIONS
     await this.overridePermissions(target);
+    await this.puppeteer.goto(target);
     if (!this.isLogged) {
       await this.metaLogin();
     }
     if (this.page) {
-      await this.page.mouse.wheel({ deltaY: getRandomNumber(400, 600) });
+      await this.page.mouse.wheel({ deltaY: getRandomNumber(400, 500) });
     }
+
     const ad_data = await this.puppeteer.evaluate(this.locatePageInfo);
     return ad_data;
   }
