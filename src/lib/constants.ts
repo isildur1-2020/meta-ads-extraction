@@ -355,6 +355,11 @@ export enum AD_FIELDS {
   AD_URL = "ad_snapshot_url",
 }
 
+export enum AD_LANGUAGES {
+  ES = "es",
+  EN = "en",
+}
+
 export type BUC_ITEM = {
   type: string;
   call_count: number;

@@ -1,10 +1,12 @@
 import { metaInstance } from "../config/axios";
 import { ENV } from "../config/Env";
 import {
-  AD_COUNTRIES,
+  AD_ACTIVE_STATUS,
   AD_FIELDS,
+  AD_LANGUAGES,
   AD_MEDIA_TYPE,
   AD_PUBLISHER_PLATFORMS,
+  AD_SEARCH_TYPE,
   AD_TYPE,
   AdsArchiveItem,
   AdsArchiveServiceParams,
@@ -42,7 +44,7 @@ export class MetaServices {
          * Set INACTIVE for ads ineligible for delivery,
          * and ALL for both types.
          */
-        // ad_active_status: AD_ACTIVE_STATUS.ACTIVE,
+        ad_active_status: AD_ACTIVE_STATUS.ACTIVE,
         /*
          * Search for ads delivered before the date (inclusive) you provide.
          * The date format should be YYYY-mm-dd.
@@ -103,7 +105,7 @@ export class MetaServices {
          * Language codes are based on the ISO 639-1 language codes and also includes ISO 639-3
          * language codes CMN and YUE.For instance ?languages=['es', 'en'].
          */
-        languajes: JSON.stringify(["es"]),
+        languages: JSON.stringify([AD_LANGUAGES.ES]),
         /*
          * Search for ads based on whether they contain a specific type of media,
          * such as an image or video.
@@ -139,7 +141,7 @@ export class MetaServices {
          * To search for multiple phrases at once, separate groups of words in search_terms by commas.
          * This will retrieve results that contain an exact match for every phrase.
          */
-        // search_type: AD_SEARCH_TYPE.KEYWORD_UNORDERED,
+        search_type: AD_SEARCH_TYPE.KEYWORD_UNORDERED,
         /*
          * Default value: false
          * Specify whether you would like your results to reveal content

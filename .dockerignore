@@ -5,3 +5,5 @@ Dockerfile
 .env.example
 .git
 .gitignore
+README.md
+mongodb
