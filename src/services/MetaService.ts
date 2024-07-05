@@ -1,5 +1,5 @@
 import { metaInstance } from "../config/axios";
-import { ENV } from "../config/Env";
+import { ENV } from "../config/variables";
 import {
   AD_ACTIVE_STATUS,
   AD_FIELDS,

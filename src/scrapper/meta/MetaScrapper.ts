@@ -1,7 +1,7 @@
 import { Browser, Page } from "puppeteer";
 import { ScrapperHTMLItem } from "../../lib/constants";
 import { Puppeteer } from "../../lib/Puppeteer";
-import { ENV } from "../../config/Env";
+import { ENV } from "../../config/variables";
 import { Logger } from "../../lib/logs";
 import { getRandomNumber } from "../../lib/utils";
 

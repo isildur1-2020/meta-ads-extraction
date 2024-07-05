@@ -1,6 +1,6 @@
 import { PuppeteerLaunchOptions } from "puppeteer";
 import { getRandomNumber } from "../lib/utils";
-import { ENV } from "./Env";
+import { ENV } from "./variables";
 
 export const puppeteerConfig = () => {
   const configDev: PuppeteerLaunchOptions = {

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { ENV } from "./Env";
+import { ENV } from "./variables";
 import { Logger } from "../lib/logs";
 
 export class MongoDB {
