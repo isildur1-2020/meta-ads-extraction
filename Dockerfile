@@ -37,6 +37,5 @@ WORKDIR /app
 # COPY --from=builder /app/dist ./dist
 # COPY --from=deps-prod /app/node_modules ./node_modules
 COPY . .
-RUN npm i
 CMD ["sleep", "10000"]
 
