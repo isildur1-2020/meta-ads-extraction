@@ -11,7 +11,6 @@ export const puppeteerConfig = () => {
   const configProd: PuppeteerLaunchOptions = {
     headless: true,
     slowMo: getRandomNumber(150, 250),
-    executablePath: "/usr/bin/chromium-browser",
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   };
   if (ARGS.APP_ENV === "prod") return configProd;
