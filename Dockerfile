@@ -1,17 +1,17 @@
-ARG NODE_VERSION=ubuntu:24.04
+ARG DOCKER_IMAGE=ubuntu:24.04
 
-# FROM ${NODE_VERSION} AS deps-prod
+# FROM ${DOCKER_IMAGE} AS deps-prod
 # WORKDIR /app
 # COPY ./package.json .
 # RUN yarn install --frozen-lockfile
 
-# FROM ${NODE_VERSION} AS builder
+# FROM ${DOCKER_IMAGE} AS builder
 # WORKDIR /app
 # COPY --from=deps-prod /app/node_modules ./node_modules
 # COPY . .
 # RUN npm run build
 
-# FROM ${NODE_VERSION} AS prod
+FROM ${DOCKER_IMAGE} AS prod
 # ENV APP_ENV=prod
 # RUN npx puppeteer browsers install chrome
 # WORKDIR /app
