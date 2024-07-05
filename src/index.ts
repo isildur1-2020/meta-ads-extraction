@@ -6,13 +6,10 @@ import { metaExtractorConfig } from "./config/metaScrapper";
 import { Logger } from "./lib/logs";
 import { MetaExtractor } from "./scrapper/MetaExtractor";
 import { MetaCookies } from "./scrapper/MetaCookies";
-// import { Company } from "./models/Company";
 
 async function main() {
   try {
     await MongoDB.connect();
-    // await Company.updateMany({ was_used: true });
-    // return;
     const metaScrapper = new MetaExtractor(
       metaExtractorConfig,
       new CompanyService(),
