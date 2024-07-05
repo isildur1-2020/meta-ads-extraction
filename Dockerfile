@@ -1,4 +1,11 @@
-ARG NODE_VERSION=node:20.15.0
+ARG NODE_VERSION=node:22.3-alpine3.19
+
+FROM ${NODE_VERSION} AS dev
+RUN apk add chromium
+WORKDIR /app
+COPY ./package.json .
+RUN yarn install --frozen-lockfile
+CMD ["npm", "run", "dev"]
 
 FROM ${NODE_VERSION} AS deps-prod
 WORKDIR /app
@@ -12,10 +19,11 @@ COPY . .
 RUN npm run build
 
 FROM ${NODE_VERSION} AS prod
-ENV APP_ENV=prod
 WORKDIR /app
+ENV APP_ENV=prod
+RUN apk add --no-cache chromium tzdata
+ENV TZ=America/Bogota
 COPY .env cookies.json tsconfig.json package*.json .
 COPY --from=builder /app/dist ./dist
 COPY --from=deps-prod /app/node_modules ./node_modules
 CMD ["npm", "run", "serve"]
-
