@@ -1,4 +1,4 @@
-ARG NODE_VERSION=node:20.15.0
+ARG NODE_VERSION=node:lts
 
 FROM ${NODE_VERSION} AS deps-prod
 WORKDIR /app
