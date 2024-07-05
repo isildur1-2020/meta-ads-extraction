@@ -29,9 +29,9 @@ RUN apt-get update && apt-get install -y wget gnupg \
       --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 ENV APP_ENV=prod
-RUN npm i
 # RUN npx puppeteer browsers install chrome
 WORKDIR /app
+RUN npm i
 # COPY .env .
 # COPY tsconfig.json .
 # COPY package*.json . 
