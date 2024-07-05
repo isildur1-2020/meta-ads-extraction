@@ -4,7 +4,7 @@ import { ARGS } from "./Args";
 
 export const puppeteerConfig = () => {
   const configDev: PuppeteerLaunchOptions = {
-    headless: true,
+    headless: false,
     slowMo: getRandomNumber(150, 250),
     args: ["--window-size=800,700"],
   };

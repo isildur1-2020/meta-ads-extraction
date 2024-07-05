@@ -5,6 +5,7 @@ import { CompanyService } from "./services/CompanyService";
 import { MetaScrapper } from "./scrapper/meta/MetaScrapper";
 import { metaExtractorConfig } from "./config/metaScrapper";
 import { Logger } from "./lib/logs";
+import { MetaCookies } from "./scrapper/meta/MetaCookies";
 
 async function main() {
   try {
@@ -12,7 +13,7 @@ async function main() {
     const metaScrapper = new MetaExtractor(
       metaExtractorConfig,
       new CompanyService(),
-      new MetaScrapper()
+      new MetaScrapper(new MetaCookies())
     );
     await metaScrapper.getAdsArchive();
   } catch (err: any) {

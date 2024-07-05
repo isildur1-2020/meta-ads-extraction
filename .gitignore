@@ -7,3 +7,4 @@ src/output
 .LSOverride
 mongo-init.js
 mongo-data
+cookies.json

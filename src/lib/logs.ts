@@ -1,4 +1,4 @@
-// import chalk from "chalk";
+import chalk from "chalk";
 
 export type LoggerImp = {
   printErrMsg: (msg: string) => void;
@@ -6,19 +6,18 @@ export type LoggerImp = {
   printWarningMsg: (msg: string) => void;
 };
 
+const log = console.log;
+
 export class Logger {
   public static printErrMsg = (msg: string) => {
-    // console.log(chalk.red.bold(msg));
-    console.log(msg);
+    log(chalk.red(msg));
   };
 
   public static printProgressMsg = (msg: string) => {
-    // console.log(chalk.green.bold);
-    console.log(msg);
+    log(chalk.green(msg));
   };
 
   public static printWarningMsg = (msg: string) => {
-    // console.log(chalk.italic.cyan);
-    console.log(msg);
+    log(chalk.cyan(msg));
   };
 }

@@ -4,15 +4,18 @@ import { Puppeteer } from "../../lib/Puppeteer";
 import { ARGS } from "../../config/Args";
 import { Logger } from "../../lib/logs";
 import { getRandomNumber } from "../../lib/utils";
+import { MetaCookiesImp } from "./MetaCookies";
 
 export class MetaScrapper {
   private puppeteer: Puppeteer;
   private page: Page | null = null;
   private browser: Browser | null = null;
-  private isLogged = false;
+  private isLogged: boolean = false;
+  private metaCookies: MetaCookiesImp;
 
-  constructor() {
+  constructor(metaCookies: MetaCookiesImp) {
     this.puppeteer = new Puppeteer();
+    this.metaCookies = metaCookies;
   }
 
   public async init() {
@@ -21,23 +24,32 @@ export class MetaScrapper {
   }
 
   public async extractMetaPageInfo(page_id: string) {
+    if (!this.page) {
+      throw new Error("[EXTRACTION] PAGE MUST BE DEFINED");
+    }
     const target = `https://www.facebook.com/${page_id}/`;
     // TO DO, IMPROVE OVERRIDE PERMISSIONS
     await this.overridePermissions(target);
     await this.puppeteer.goto(target);
-    if (!this.isLogged) {
-      await this.metaLogin();
-    }
-    if (this.page) {
-      await this.page.mouse.wheel({ deltaY: getRandomNumber(400, 500) });
-    }
+
+    if (!this.isLogged) await this.metaLogin();
+    await this.page.mouse.wheel({ deltaY: getRandomNumber(400, 500) });
 
     const ad_data = await this.puppeteer.evaluate(this.locatePageInfo);
     return ad_data;
   }
 
-  public async metaLogin() {
-    if (!this.page) return null;
+  private async metaLogin() {
+    if (!this.page) {
+      throw new Error("[META LOGIN] PAGE MUST BE DEFINED");
+    }
+
+    const cookies = await this.metaCookies.get();
+    if (cookies) {
+      await this.page.setCookie(...cookies);
+      this.isLogged = true;
+      return;
+    }
 
     await this.page.waitForSelector("#email");
     Logger.printProgressMsg("[SCRAPPING] TYPING EMAIL...");
@@ -54,6 +66,8 @@ export class MetaScrapper {
       this.page.waitForNavigation(),
     ]);
 
+    const currentCookies = await this.page.cookies();
+    await this.metaCookies.save(currentCookies);
     this.isLogged = true;
   }
 
