@@ -21,7 +21,7 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | b
     [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion" && \
     nvm install 20.15.0
 ENV APP_ENV=prod
-RUN npx puppeteer browsers install chrome
+# RUN npx puppeteer browsers install chrome
 WORKDIR /app
 COPY .env .
 COPY tsconfig.json .
