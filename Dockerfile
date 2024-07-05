@@ -15,7 +15,7 @@ ARG DOCKER_IMAGE=ubuntu:24.04
 FROM ${DOCKER_IMAGE} AS prod
 RUN apt update
 RUN apt install -y curl unzip tzdata chromium-browser
-ENV TZ_DATA=America/Bogota
+ENV TZ_DATA=Europe/Paris
 ENV NVM_DIR=/root/.nvm
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && \
@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install -y wget gnupg \
       --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 ENV APP_ENV=prod
+RUN npm i
 # RUN npx puppeteer browsers install chrome
 WORKDIR /app
 # COPY .env .
