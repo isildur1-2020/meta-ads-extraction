@@ -1,29 +1,24 @@
-FROM node:22.3-alpine3.19 AS dev
-RUN apk add chromium
-WORKDIR /app
-COPY ./package.json .
-RUN yarn install --frozen-lockfile
-CMD ["npm", "run", "dev"]
+ARG NODE_VERSION=node:20.15.0
 
-FROM node:22.3-alpine3.19 AS deps-prod
+FROM ${NODE_VERSION} AS deps-prod
 WORKDIR /app
 COPY ./package.json .
 RUN yarn install --frozen-lockfile
 
-FROM node:22.3-alpine3.19 AS builder
+FROM ${NODE_VERSION} AS builder
 WORKDIR /app
 COPY --from=deps-prod /app/node_modules ./node_modules
 COPY . .
 RUN npm run build
 
-FROM node:22.3-alpine3.19 AS prod
-RUN apk add --no-cache chromium tzdata
-ENV TZ=America/Bogota
+FROM ${NODE_VERSION} AS prod
+ENV APP_ENV=prod
+RUN npx puppeteer browsers install chrome
 WORKDIR /app
 COPY .env .
 COPY tsconfig.json .
 COPY package*.json . 
 COPY --from=builder /app/dist ./dist
 COPY --from=deps-prod /app/node_modules ./node_modules
-CMD ["npm", "run", "serve"]
+CMD ["sleep", "10000"]
 

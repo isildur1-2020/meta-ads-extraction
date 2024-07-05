@@ -1,4 +1,4 @@
-import { styleText } from "node:util";
+import chalk from "chalk";
 
 export type LoggerImp = {
   printErrMsg: (msg: string) => void;
@@ -8,14 +8,17 @@ export type LoggerImp = {
 
 export class Logger {
   public static printErrMsg = (msg: string) => {
-    console.log(styleText(["red", "bold"], msg));
+    // console.log(chalk.red.bold(msg));
+    console.log(msg);
   };
 
   public static printProgressMsg = (msg: string) => {
-    console.log(styleText(["green", "bold"], msg));
+    // console.log(chalk.green.bold);
+    console.log(msg);
   };
 
   public static printWarningMsg = (msg: string) => {
-    console.log(styleText(["italic", "cyan"], msg));
+    // console.log(chalk.italic.cyan);
+    console.log(msg);
   };
 }
