@@ -12,6 +12,8 @@ export class MetaScrapper {
   private browser: Browser | null = null;
   private isLogged: boolean = false;
   private metaCookies: MetaCookiesImp;
+  private USER_AGENT =
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
 
   constructor(metaCookies: MetaCookiesImp) {
     this.puppeteer = new Puppeteer();
@@ -30,6 +32,7 @@ export class MetaScrapper {
     const target = `https://www.facebook.com/${page_id}/`;
     // TO DO, IMPROVE OVERRIDE PERMISSIONS
     await this.overridePermissions(target);
+    await this.page.setUserAgent(this.USER_AGENT);
     await this.puppeteer.goto(target);
 
     if (!this.isLogged) await this.metaLogin();
