@@ -15,8 +15,9 @@ ARG DOCKER_IMAGE=ubuntu:24.04
 FROM ${DOCKER_IMAGE} AS prod
 RUN apt update
 RUN apt install -y curl unzip tzdata chromium-browser
-ENV TZ_DATA=Europe/Paris
+ENV TZ_DATA=America/New_York
 ENV NVM_DIR=/root/.nvm
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && \
     [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion" && \
