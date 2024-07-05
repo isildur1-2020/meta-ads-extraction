@@ -17,14 +17,15 @@ RUN apt install -y curl unzip
 ENV NVM_DIR=/root/.nvm
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && \
-    [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
-# ENV APP_ENV=prod
-# RUN npx puppeteer browsers install chrome
-# WORKDIR /app
-# COPY .env .
-# COPY tsconfig.json .
-# COPY package*.json . 
-# COPY --from=builder /app/dist ./dist
-# COPY --from=deps-prod /app/node_modules ./node_modules
+    [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion" && \
+    nvm install 20.15.0
+ENV APP_ENV=prod
+RUN npx puppeteer browsers install chrome
+WORKDIR /app
+COPY .env .
+COPY tsconfig.json .
+COPY package*.json . 
+COPY --from=builder /app/dist ./dist
+COPY --from=deps-prod /app/node_modules ./node_modules
 CMD ["sleep", "10000"]
 
