@@ -1,7 +1,7 @@
 import { join } from "path";
 import { writeFile, readFile, access, constants } from "fs/promises";
-import { Logger } from "../../lib/logs";
 import { Cookie, CookieParam } from "puppeteer";
+import { Logger } from "../lib/logs";
 
 export type MetaCookiesImp = {
   get: () => Promise<CookieParam[] | null>;

@@ -4,15 +4,15 @@ import {
   BUC_ITEM,
   MetaResponseHeaders,
   MetaScrapperConfig,
-} from "../../lib/constants";
-import { Logger } from "../../lib/logs";
-import { MetaServices } from "../../services/MetaService";
+} from "../lib/constants";
+import { Logger } from "../lib/logs";
+import { MetaServices } from "../services/MetaService";
 import { AxiosError } from "axios";
-import { ARGS } from "../../config/Args";
+import { ARGS } from "../config/Args";
+import { getRandomNumber } from "../lib/utils";
+import { CompanyService } from "../services/CompanyService";
+import { Slepper } from "../lib/Slepper";
 import { MetaScrapper } from "./MetaScrapper";
-import { getRandomNumber } from "../../lib/utils";
-import { CompanyService } from "../../services/CompanyService";
-import { Slepper } from "../../lib/Slepper";
 
 export class MetaExtractor {
   private adsExtracted = 0;

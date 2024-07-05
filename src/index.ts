@@ -1,11 +1,11 @@
 import "dotenv/config";
 import { MongoDB } from "./config/MongoDB";
-import { MetaExtractor } from "./scrapper/meta/MetaExtractor";
 import { CompanyService } from "./services/CompanyService";
-import { MetaScrapper } from "./scrapper/meta/MetaScrapper";
+import { MetaScrapper } from "./scrapper/MetaScrapper";
 import { metaExtractorConfig } from "./config/metaScrapper";
 import { Logger } from "./lib/logs";
-import { MetaCookies } from "./scrapper/meta/MetaCookies";
+import { MetaExtractor } from "./scrapper/MetaExtractor";
+import { MetaCookies } from "./scrapper/MetaCookies";
 
 async function main() {
   try {
