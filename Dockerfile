@@ -14,7 +14,7 @@ ARG DOCKER_IMAGE=ubuntu:24.04
 FROM ${DOCKER_IMAGE} AS prod
 RUN apt update
 RUN apt install -y curl unzip
-RUN export NVM_DIR="$HOME/.nvm"
+ENV NVM_DIR=/root/.nvm
 RUN [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 RUN [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 # ENV APP_ENV=prod
