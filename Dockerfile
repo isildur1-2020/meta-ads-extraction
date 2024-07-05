@@ -30,13 +30,14 @@ RUN apt-get update && apt-get install -y wget gnupg \
       --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 ENV APP_ENV=prod
-# RUN npx puppeteer browsers install chrome
+
 WORKDIR /app
+COPY . .
+RUN npm i
 # COPY .env .
 # COPY tsconfig.json .
 # COPY package*.json . 
 # COPY --from=builder /app/dist ./dist
 # COPY --from=deps-prod /app/node_modules ./node_modules
-COPY . .
 CMD ["sleep", "10000"]
 
