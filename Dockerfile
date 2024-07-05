@@ -1,5 +1,4 @@
 ARG DOCKER_IMAGE=ubuntu:24.04
-ARG NVM_REPO=https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh
 
 # FROM ${DOCKER_IMAGE} AS deps-prod
 # WORKDIR /app
@@ -16,7 +15,7 @@ FROM ${DOCKER_IMAGE} AS prod
 RUN apt update
 RUN apt install -y curl unzip
 ENV NVM_DIR=/root/.nvm
-RUN curl -o- ${NVM_REPO} | bash && \
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && \
     [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
 # ENV APP_ENV=prod
