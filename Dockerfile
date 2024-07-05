@@ -12,6 +12,10 @@ ARG DOCKER_IMAGE=ubuntu:24.04
 # RUN npm run build
 
 FROM ${DOCKER_IMAGE} AS prod
+RUN apt-get install -y curl unzip
+ENV NVM_DIR="$HOME/.nvm"
+RUN [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+RUN [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" 
 # ENV APP_ENV=prod
 # RUN npx puppeteer browsers install chrome
 # WORKDIR /app
