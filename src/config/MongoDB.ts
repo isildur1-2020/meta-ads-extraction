@@ -12,8 +12,8 @@ export class MongoDB {
       await mongoose.connect(URL);
       Logger.printProgressMsg("MongoDB Atlas connected successfully");
     } catch (err: any) {
-      Logger.printErrMsg("MongoDB Atlas error");
-      Logger.printErrMsg(err);
+      Logger.printErrMsg("[DATABASE] MongoDB Atlas error");
+      throw new Error(err);
     }
   }
 }
