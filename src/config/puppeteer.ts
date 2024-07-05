@@ -10,6 +10,7 @@ export const puppeteerConfig = () => {
   };
   const configProd: PuppeteerLaunchOptions = {
     headless: true,
+    executablePath: "/usr/bin/chromium",
     slowMo: getRandomNumber(150, 250),
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   };
