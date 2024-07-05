@@ -1,5 +1,8 @@
 # META ADS EXTRACTION
 
+Verify .env and cookies.json to run
+And its the first time also mongo-init.js
+
 ### RUN WITH NPM
 
 `npm i`
