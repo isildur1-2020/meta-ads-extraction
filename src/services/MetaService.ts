@@ -1,5 +1,5 @@
 import { metaInstance } from "../config/axios";
-import { ENV } from "../config/variables";
+import { ARGS } from "../config/Args";
 import {
   AD_ACTIVE_STATUS,
   AD_FIELDS,
@@ -30,7 +30,7 @@ export class MetaServices {
       params: {
         after: after || "",
         limit,
-        access_token: ENV.META_LONG_TOKEN,
+        access_token: ARGS.META_LONG_TOKEN,
         fields: JSON.stringify([
           AD_FIELDS.PAGE_ID,
           AD_FIELDS.PAGE_NAME,

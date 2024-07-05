@@ -1,6 +1,6 @@
 import { PuppeteerLaunchOptions } from "puppeteer";
 import { getRandomNumber } from "../lib/utils";
-import { ENV } from "./variables";
+import { ARGS } from "./Args";
 
 export const puppeteerConfig = () => {
   const configDev: PuppeteerLaunchOptions = {
@@ -15,6 +15,6 @@ export const puppeteerConfig = () => {
       "/root/.cache/puppeteer/chrome/linux-126.0.6478.126/chrome-linux64/chrome",
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   };
-  if (ENV.APP_ENV === "dev") return configDev;
-  return configProd;
+  if (ARGS.APP_ENV === "prod") return configProd;
+  return configDev;
 };

@@ -8,7 +8,7 @@ import {
 import { Logger } from "../../lib/logs";
 import { MetaServices } from "../../services/MetaService";
 import { AxiosError } from "axios";
-import { ENV } from "../../config/variables";
+import { ARGS } from "../../config/Args";
 import { MetaScrapper } from "./MetaScrapper";
 import { getRandomNumber } from "../../lib/utils";
 import { CompanyService } from "../../services/CompanyService";
@@ -118,11 +118,11 @@ export class MetaExtractor {
   }
 
   private getRateLimits(headers: MetaResponseHeaders) {
-    if (!ENV.SCRAPPER_ID) {
-      throw new Error("SCRAPPER_ID must defined");
+    if (!ARGS.META_APP_ID) {
+      throw new Error("META_APP_ID must be defined");
     }
     const limits = JSON.parse(headers["x-business-use-case-usage"]);
-    return limits[ENV.SCRAPPER_ID][0] as BUC_ITEM;
+    return limits[ARGS.META_APP_ID][0] as BUC_ITEM;
   }
 
   private async persistAdsData(ads: AdsArchiveItem[]) {

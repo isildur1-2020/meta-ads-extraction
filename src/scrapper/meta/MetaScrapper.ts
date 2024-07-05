@@ -1,7 +1,7 @@
 import { Browser, Page } from "puppeteer";
 import { ScrapperHTMLItem } from "../../lib/constants";
 import { Puppeteer } from "../../lib/Puppeteer";
-import { ENV } from "../../config/variables";
+import { ARGS } from "../../config/Args";
 import { Logger } from "../../lib/logs";
 import { getRandomNumber } from "../../lib/utils";
 
@@ -41,11 +41,11 @@ export class MetaScrapper {
 
     await this.page.waitForSelector("#email");
     Logger.printProgressMsg("[SCRAPPING] TYPING EMAIL...");
-    await this.page.type("#email", ENV.META_USERNAME);
+    await this.page.type("#email", ARGS.META_USERNAME);
 
     await this.page.waitForSelector("#pass");
     Logger.printProgressMsg("[SCRAPPING] TYPING PASSWORD...");
-    await this.page.type("#pass", ENV.META_PASSWORD);
+    await this.page.type("#pass", ARGS.META_PASSWORD);
 
     await this.page.waitForSelector("#loginbutton");
     Logger.printProgressMsg("[SCRAPPING] SUBMIT LOGIN...");
