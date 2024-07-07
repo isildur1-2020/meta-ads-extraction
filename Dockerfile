@@ -1,12 +1,5 @@
 ARG NODE_VERSION=node:22.3-alpine3.19
 
-FROM ${NODE_VERSION} AS dev
-RUN apk add chromium
-WORKDIR /app
-COPY ./package.json .
-RUN yarn install --frozen-lockfile
-CMD ["npm", "run", "dev"]
-
 FROM ${NODE_VERSION} AS deps-prod
 WORKDIR /app
 COPY ./package.json .
