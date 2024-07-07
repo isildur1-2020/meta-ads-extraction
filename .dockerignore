@@ -6,4 +6,3 @@ Dockerfile
 .git
 .gitignore
 README.md
-mongodb
