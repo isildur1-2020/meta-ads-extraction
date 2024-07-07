@@ -33,7 +33,10 @@ export class MetaScrapper {
     await this.page.setUserAgent(USER_AGENT.MAC_OS);
     await this.puppeteer.goto(target);
 
-    if (!this.isLogged) await this.metaLogin();
+    if (ARGS.WITH_META_COOKIES && !this.isLogged) {
+      await this.metaLogin();
+    }
+
     await this.page.mouse.wheel({ deltaY: getRandomNumber(400, 500) });
 
     const ad_data = await this.puppeteer.evaluate(this.locatePageInfo);

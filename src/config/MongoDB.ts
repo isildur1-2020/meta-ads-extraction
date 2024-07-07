@@ -22,10 +22,10 @@ export class MongoDB {
     if (!ARGS.MONGO_PASSWORD) {
       throw new Error("[DATABASE] MONGO_PASSWORD must be defined");
     }
-    if (!ARGS.MONGO_HOST) {
+    if (!ARGS.MONGO_DATABASE) {
       throw new Error("[DATABASE] MONGO_HOST must be defined");
     }
-    if (!ARGS.MONGO_DATABASE) {
+    if (!ARGS.MONGO_HOST) {
       throw new Error("[DATABASE] MONGO_HOST must be defined");
     }
   }
