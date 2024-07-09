@@ -13,7 +13,6 @@ RUN npm run build
 
 FROM ${NODE_VERSION} AS prod
 WORKDIR /app
-ENV APP_ENV=prod
 RUN apk add --no-cache chromium tzdata
 ENV TZ=America/Bogota
 COPY .env cookies.json tsconfig.json package*.json .
