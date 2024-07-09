@@ -21,4 +21,3 @@ services:
 
 networks:
   scrapper-network:
-    driver: brigde
