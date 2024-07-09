@@ -10,7 +10,7 @@ services:
     image: meta-ads-extraction-prod
     container_name: meta-ads-extraction-prod
     networks:
-      - kiwanas-network
+      - meta-ads-network
     environment:
       MONGO_USER: ${MONGO_USER}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
@@ -19,5 +19,5 @@ services:
       META_LONG_TOKEN: ${META_LONG_TOKEN}
 
 networks:
-  kiwanas-network:
+  meta-ads-network:
     driver: brigde
