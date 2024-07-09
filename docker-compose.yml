@@ -9,9 +9,15 @@ services:
       dockerfile: Dockerfile
     image: meta-ads-extraction-prod
     container_name: meta-ads-extraction-prod
+    networks:
+      - kiwanas-network
     environment:
       MONGO_USER: ${MONGO_USER}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       MONGO_DATABASE: ${MONGO_DATABASE}
       META_APP_ID: ${META_APP_ID}
       META_LONG_TOKEN: ${META_LONG_TOKEN}
+
+networks:
+  kiwanas-network:
+    driver: brigde
