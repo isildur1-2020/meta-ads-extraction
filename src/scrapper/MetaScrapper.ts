@@ -33,7 +33,7 @@ export class MetaScrapper {
     await this.page.setUserAgent(USER_AGENT.MAC_OS);
     await this.puppeteer.goto(target);
 
-    if (ARGS.WITH_META_COOKIES && !this.isLogged) {
+    if (!this.isLogged) {
       await this.metaLogin();
     }
 

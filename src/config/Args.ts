@@ -1,9 +1,4 @@
-import { stringToBoolean } from "../lib/utils";
-
 export class ARGS {
-  public static WITH_META_COOKIES = stringToBoolean(
-    process.env.WITH_META_COOKIES
-  );
   public static META_LONG_TOKEN = process.env.META_LONG_TOKEN ?? "";
   public static META_APP_ID = process.env.META_APP_ID ?? "";
   public static MONGO_USER = process.env.MONGO_USER;
