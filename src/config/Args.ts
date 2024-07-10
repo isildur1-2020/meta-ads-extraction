@@ -1,4 +1,6 @@
 export class ARGS {
+  public static AD_DELIVERY_DATE_MIN = process.env.AD_DELIVERY_DATE_MIN ?? "";
+  public static AD_DELIVERY_DATE_MAX = process.env.AD_DELIVERY_DATE_MAX ?? "";
   public static META_LONG_TOKEN = process.env.META_LONG_TOKEN ?? "";
   public static META_APP_ID = process.env.META_APP_ID ?? "";
   public static MONGO_USER = process.env.MONGO_USER;
