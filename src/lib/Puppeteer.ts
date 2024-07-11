@@ -13,11 +13,11 @@ export class Puppeteer {
 
   public async launchBrowser() {
     try {
-      Logger.printProgressMsg("[PUPPETEER] Starting browser...");
+      Logger.printProgressMsg("[PUPPETEER] STARTING BROWSER...");
       const browser = await this.tryLaunchBrowser();
       return browser;
     } catch (err: any) {
-      const message = `[PUPPETEER] Err: Launch browser\n${err}`;
+      const message = `[PUPPETEER] ERR: LAUNCHING BROWSER\n${err}`;
       throw new Error(message);
     }
   }
@@ -36,11 +36,11 @@ export class Puppeteer {
 
   public async openPage() {
     try {
-      Logger.printProgressMsg("[PUPPETEER] Opening page...");
+      Logger.printProgressMsg("[PUPPETEER] OPENING PAGE...");
       const page = await this.tryOpenPage();
       return page;
     } catch (err: any) {
-      const message = `[PUPPETEER] Err: Open Page\n${err}`;
+      const message = `[PUPPETEER] ERR: OPENING PAGE...\n${err}`;
       throw new Error(message);
     }
   }
@@ -56,7 +56,7 @@ export class Puppeteer {
     try {
       await this.tryGoto(URL);
     } catch (err: any) {
-      const message = `[PUPPETEER] Err: goto\n${err}`;
+      const message = `[PUPPETEER] ERR: GOTO\n${err}`;
       console.log(message, err);
     }
   }
@@ -71,7 +71,7 @@ export class Puppeteer {
     try {
       return await this.tryEvaluate(handleEvaluate);
     } catch (err: any) {
-      const message = `[PUPPETEER] Err: evaluate\n${err}`;
+      const message = `[PUPPETEER] ERR: EVALUATE\n${err}`;
       throw new Error(message);
     }
   }

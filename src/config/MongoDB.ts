@@ -8,9 +8,11 @@ export class MongoDB {
       this.checkVariables();
       const URL = `mongodb://${ARGS.MONGO_USER}:${ARGS.MONGO_PASSWORD}@${ARGS.MONGO_HOST}:27017/${ARGS.MONGO_DATABASE}`;
       await mongoose.connect(URL);
-      Logger.printProgressMsg("MongoDB Atlas connected successfully");
+      Logger.printProgressMsg(
+        "[DATABASE] MONGO DATABASE CONNECTED SUCCESSFULLY!"
+      );
     } catch (err: any) {
-      Logger.printErrMsg("[DATABASE] MongoDB Atlas error");
+      Logger.printErrMsg("[DATABASE] MONGO DATABSE ERR:");
       throw new Error(err);
     }
   }

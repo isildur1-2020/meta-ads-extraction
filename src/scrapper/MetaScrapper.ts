@@ -1,29 +1,29 @@
 import { Browser, Page } from "puppeteer";
-import { ScrapperHTMLItem } from "../lib/constants";
+import { AdScrappedItem, ScrapperHTMLItem } from "../lib/constants";
 import { Puppeteer } from "../lib/Puppeteer";
 import { ARGS } from "../config/Args";
 import { Logger } from "../lib/logs";
 import { getRandomNumber, USER_AGENT } from "../lib/utils";
 import { MetaCookiesImp } from "./MetaCookies";
 
-export class MetaScrapper {
+export interface MetaScrapperImp {
+  extractMetaPageInfo: (page_id: string) => Promise<AdScrappedItem | null>;
+}
+
+export class MetaScrapper implements MetaScrapperImp {
   private puppeteer: Puppeteer;
+  private metaCookies: MetaCookiesImp;
   private page: Page | null = null;
   private browser: Browser | null = null;
   private isLogged: boolean = false;
-  private metaCookies: MetaCookiesImp;
 
   constructor(metaCookies: MetaCookiesImp) {
     this.puppeteer = new Puppeteer();
     this.metaCookies = metaCookies;
   }
 
-  public async init() {
-    this.browser = await this.puppeteer.launchBrowser();
-    this.page = await this.puppeteer.openPage();
-  }
-
   public async extractMetaPageInfo(page_id: string) {
+    await this.init();
     if (!this.page) {
       throw new Error("[EXTRACTION] PAGE MUST BE DEFINED");
     }
@@ -39,8 +39,17 @@ export class MetaScrapper {
 
     await this.page.mouse.wheel({ deltaY: getRandomNumber(400, 500) });
 
-    const ad_data = await this.puppeteer.evaluate(this.locatePageInfo);
-    return ad_data;
+    const extractedData = await this.puppeteer.evaluate(this.locatePageInfo);
+    return extractedData;
+  }
+
+  private async init() {
+    if (this.browser === null) {
+      this.browser = await this.puppeteer.launchBrowser();
+    }
+    if (this.page === null) {
+      this.page = await this.puppeteer.openPage();
+    }
   }
 
   private async metaLogin() {
@@ -75,14 +84,14 @@ export class MetaScrapper {
     this.isLogged = true;
   }
 
-  public async overridePermissions(target: string) {
+  private async overridePermissions(target: string) {
     if (this.browser) {
       const context = this.browser.defaultBrowserContext();
       await context.overridePermissions(target, []);
     }
   }
 
-  private locatePageInfo() {
+  private locatePageInfo(): AdScrappedItem | null {
     const getClosestText = (props: ScrapperHTMLItem): string => {
       const { iconClass, parentClass, contentClass } = props;
       const iconNode = document.querySelector(iconClass);

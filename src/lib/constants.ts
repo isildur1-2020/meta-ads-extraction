@@ -7,17 +7,7 @@ export type AdScrappedItem = {
   address?: string;
   phone?: string;
   website?: string;
-  email?: string;
-};
-
-export type ICompany = {
-  page_name: String;
-  page_id: String;
-  ad_delivery_start_time: String;
-  address: String;
-  phone: String;
-  email: String;
-  website: String;
+  email: string;
 };
 
 export interface AdsArchiveItem extends AdScrappedItem {
