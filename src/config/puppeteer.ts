@@ -3,23 +3,17 @@ import { getRandomNumber } from "../lib/utils";
 import { ARGS } from "./Args";
 
 export const puppeteerConfig = () => {
-  if (ARGS.PROXY_SERVER === null) {
-    throw new Error("[PUPPETEER] PROXY_SERVER must be defined");
-  }
   const configDev: PuppeteerLaunchOptions = {
-    headless: false,
     slowMo: 250,
-    args: [`--proxy-server=${ARGS.PROXY_SERVER}`],
+    headless: false,
+    // args: ARGS.PROXY_SERVER ? [`--proxy-server=${ARGS.PROXY_SERVER}`] : [],
+    args: ["--window-size=785,600"],
   };
   const configProd: PuppeteerLaunchOptions = {
     headless: true,
     executablePath: "/usr/bin/chromium",
     slowMo: getRandomNumber(450, 700),
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      `--proxy-server=${ARGS.PROXY_SERVER}`,
-    ],
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   };
   if (ARGS.APP_ENV === "prod") return configProd;
   return configDev;
