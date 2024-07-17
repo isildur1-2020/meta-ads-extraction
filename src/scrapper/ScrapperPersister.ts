@@ -1,6 +1,5 @@
 import { AdsArchiveItem, AdScrappedItem } from "../lib/constants";
 import { Logger } from "../lib/logs";
-import { Slepper } from "../lib/Slepper";
 import { CompanyServiceImp } from "../services/CompanyService";
 import { MetaScrapperImp } from "./MetaScrapper";
 

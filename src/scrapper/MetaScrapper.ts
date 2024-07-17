@@ -31,7 +31,12 @@ export class MetaScrapper implements MetaScrapperImp {
     // TO DO, IMPROVE OVERRIDE PERMISSIONS
     await this.overridePermissions(target);
     await this.page.setUserAgent(USER_AGENT.MAC_OS);
-    await this.puppeteer.goto(target);
+
+    try {
+      await this.puppeteer.goto(target);
+    } catch (err) {
+      return null;
+    }
 
     if (!this.isLogged) {
       await this.metaLogin();
