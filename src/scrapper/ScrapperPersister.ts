@@ -22,8 +22,6 @@ export class ScrapperPersister implements ScrapperPersisterImp {
       if (existsCompany) continue;
 
       const extractedData = await this.scrappingPage(page_id);
-      if (!extractedData) continue;
-
       await this.persistExtraction({ ad, extractedData });
     }
   }
@@ -63,13 +61,26 @@ export class ScrapperPersister implements ScrapperPersisterImp {
     extractedData,
   }: {
     ad: AdsArchiveItem;
-    extractedData: AdScrappedItem;
+    extractedData: AdScrappedItem | null;
   }) {
-    const payload = {
-      ...ad,
-      ...extractedData,
-      search_terms: this.search_terms,
-    };
+    let payload: AdsArchiveItem & { search_terms: string };
+    if (extractedData === null) {
+      payload = {
+        ...ad,
+        address: "",
+        phone: "",
+        website: "",
+        email: "",
+        has_contact_info: false,
+        search_terms: this.search_terms,
+      };
+    } else {
+      payload = {
+        ...ad,
+        ...extractedData,
+        search_terms: this.search_terms,
+      };
+    }
     await this.companyService.create(payload);
   }
 }

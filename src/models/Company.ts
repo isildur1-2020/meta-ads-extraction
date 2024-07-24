@@ -6,11 +6,12 @@ export type ICompany = {
   ad_delivery_start_time: string;
   address?: string;
   phone?: string;
-  email: string;
+  email?: string;
   website?: string;
   search_terms: string;
   ad_snapshot_url: string;
   was_used?: boolean;
+  has_contact_info?: boolean;
 };
 
 export type CompanyModel = Model<ICompany>;
@@ -38,6 +39,10 @@ const companySchema = new Schema<ICompany, CompanyModel>(
     was_used: {
       type: Boolean,
       default: false,
+    },
+    has_contact_info: {
+      type: Boolean,
+      default: true,
     },
   },
   { timestamps: true }

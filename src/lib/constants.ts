@@ -7,13 +7,14 @@ export type AdScrappedItem = {
   address?: string;
   phone?: string;
   website?: string;
-  email: string;
+  email?: string;
 };
 
 export interface AdsArchiveItem extends AdScrappedItem {
   id: string;
   page_name: string;
   page_id: string;
+  has_contact_info?: boolean;
   ad_delivery_start_time: string;
   ad_snapshot_url: string;
 }
