@@ -1,10 +1,14 @@
+import { AD_COUNTRIES } from "../lib/constants";
+
 export class ARGS {
   public static APP_ENV = process.env.APP_ENV ?? "dev";
   public static MIN_LIMIT_ADS = Number(process.env.MIN_LIMIT_ADS) ?? null;
   public static MAX_LIMIT_ADS = Number(process.env.MAX_LIMIT_ADS) ?? null;
   public static AD_DELIVERY_DATE_MIN = process.env.AD_DELIVERY_DATE_MIN ?? "";
   public static AD_DELIVERY_DATE_MAX = process.env.AD_DELIVERY_DATE_MAX ?? "";
-  public static AD_REACHED_COUNTRIES = process.env.AD_REACHED_COUNTRIES ?? null;
+  public static AD_REACHED_COUNTRIES = process.env.AD_REACHED_COUNTRIES
+    ? JSON.parse(process.env.AD_REACHED_COUNTRIES)
+    : [AD_COUNTRIES.ALL];
   public static PROXY_SERVER = process.env.PROXY_SERVER ?? null;
 
   public static MONGO_USER = process.env.MONGO_USER;
