@@ -22,8 +22,27 @@ export class MetaExtractor {
     config: MetaScrapperConfig,
     scrapperPersister: ScrapperPersisterImp
   ) {
+    this.printConfig();
     this.config = config;
     this.scrapperPersister = scrapperPersister;
+  }
+
+  private printConfig() {
+    Logger.printWarningMsg(
+      `\n---------------------------------------------------\n` +
+        `-- CONFIGURATION:\n` +
+        `-- SEARCH TERMS: ${JSON.stringify(this.config.search_terms)}\n` +
+        `-- AD DELIVERY DATE MIN: ${JSON.stringify(
+          this.config.ad_delivery_date_min
+        )}\n` +
+        `-- AD DELIVERY DATE MAX: ${JSON.stringify(
+          this.config.ad_delivery_date_max
+        )}\n` +
+        `-- AD REACHED COUNTRIES: ${JSON.stringify(
+          this.config.ad_reached_countries
+        )}\n` +
+        `---------------------------------------------------\n`
+    );
   }
 
   public async getAdsArchive() {
