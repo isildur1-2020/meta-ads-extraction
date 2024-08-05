@@ -4,6 +4,7 @@ export class ARGS {
   public static MAX_LIMIT_ADS = Number(process.env.MAX_LIMIT_ADS) ?? null;
   public static AD_DELIVERY_DATE_MIN = process.env.AD_DELIVERY_DATE_MIN ?? "";
   public static AD_DELIVERY_DATE_MAX = process.env.AD_DELIVERY_DATE_MAX ?? "";
+  public static AD_REACHED_COUNTRIES = process.env.AD_REACHED_COUNTRIES ?? null;
   public static PROXY_SERVER = process.env.PROXY_SERVER ?? null;
 
   public static MONGO_USER = process.env.MONGO_USER;
