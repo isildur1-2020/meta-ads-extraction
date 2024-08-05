@@ -44,8 +44,12 @@ export class MetaScrapper implements MetaScrapperImp {
 
     await this.page.mouse.wheel({ deltaY: getRandomNumber(400, 500) });
 
-    const extractedData = await this.puppeteer.evaluate(this.locatePageInfo);
-    return extractedData;
+    try {
+      const extractedData = await this.puppeteer.evaluate(this.locatePageInfo);
+      return extractedData;
+    } catch (err) {
+      return null;
+    }
   }
 
   private async init() {
