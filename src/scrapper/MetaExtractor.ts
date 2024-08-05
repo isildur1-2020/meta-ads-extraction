@@ -22,25 +22,25 @@ export class MetaExtractor {
     config: MetaScrapperConfig,
     scrapperPersister: ScrapperPersisterImp
   ) {
-    this.printConfig();
+    this.printConfig(config);
     this.config = config;
     this.scrapperPersister = scrapperPersister;
   }
 
-  private printConfig() {
+  private printConfig(config: MetaScrapperConfig) {
+    const {
+      search_terms,
+      ad_delivery_date_min,
+      ad_delivery_date_max,
+      ad_reached_countries,
+    } = config;
     Logger.printWarningMsg(
       `\n---------------------------------------------------\n` +
-        `-- CONFIGURATION:\n` +
-        `-- SEARCH TERMS: ${JSON.stringify(this.config.search_terms)}\n` +
-        `-- AD DELIVERY DATE MIN: ${JSON.stringify(
-          this.config.ad_delivery_date_min
-        )}\n` +
-        `-- AD DELIVERY DATE MAX: ${JSON.stringify(
-          this.config.ad_delivery_date_max
-        )}\n` +
-        `-- AD REACHED COUNTRIES: ${JSON.stringify(
-          this.config.ad_reached_countries
-        )}\n` +
+        `-- ENVIRONMENT VARIABLES:\n` +
+        `-- SEARCH TERMS: ${JSON.stringify(search_terms)}\n` +
+        `-- AD DELIVERY DATE MIN: ${JSON.stringify(ad_delivery_date_min)}\n` +
+        `-- AD DELIVERY DATE MAX: ${JSON.stringify(ad_delivery_date_max)}\n` +
+        `-- AD REACHED COUNTRIES: ${JSON.stringify(ad_reached_countries)}\n` +
         `---------------------------------------------------\n`
     );
   }
